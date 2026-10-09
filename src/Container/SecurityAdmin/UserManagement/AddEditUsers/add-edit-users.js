@@ -1,11 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { Grid, Box } from "@material-ui/core";
-import { Typography } from "antd";
-import AddIcon from "@material-ui/icons/Add";
-import Restore from "@material-ui/icons/Restore";
-import style from "./custom-css.css";
+import { Typography, Row, Col } from "antd";
+import { UndoOutlined as Restore } from "@ant-design/icons";
+import "./custom-css.css";
 import styles from "../../../../Components/Elements/Loader/style.module.css";
-// import {StopOutlined} from  '@material-ui/icons/StopOutlined';
 
 import { useDispatch, useSelector } from "react-redux";
 import { roles } from "../../../../Common/SelectFieldOption/select-field-option";
@@ -278,25 +275,13 @@ const AddEditUsers = () => {
       render: (text) => (
         <>
           {text === 1 ? (
-            <div
-              style={{ cursor: "pointer" }}
-              className="icon-check icon-size-one greenTick"
-            ></div>
+            <div className="icon-check icon-size-one greenTick u-cursor-pointer"></div>
           ) : text === 2 ? (
-            <div
-              style={{ cursor: "pointer" }}
-              className="icon-not-allowed icon-size-one crossRed"
-            ></div>
+            <div className="icon-not-allowed icon-size-one crossRed u-cursor-pointer"></div>
           ) : text === 3 ? (
-            <div
-              style={{ cursor: "pointer" }}
-              className="icon-lock icon-size-one crossRed"
-            ></div>
+            <div className="icon-lock icon-size-one crossRed u-cursor-pointer"></div>
           ) : (
-            <div
-              style={{ cursor: "pointer" }}
-              className="icon-close icon-size-one crossRed"
-            ></div>
+            <div className="icon-close icon-size-one crossRed u-cursor-pointer"></div>
           )}
         </>
       ),
@@ -309,9 +294,8 @@ const AddEditUsers = () => {
       width: "20%",
       render: (text, record) => (
         <div
-          style={{ cursor: "pointer" }}
           onClick={(e) => edit(e, record)}
-          className="icon-edit icon-size-one beachGreen"
+          className="icon-edit icon-size-one beachGreen u-cursor-pointer"
         />
       ),
     },
@@ -749,8 +733,8 @@ const AddEditUsers = () => {
       <Title className="EditUserTitle" level={3}>
         Edit User
       </Title>
-      <Grid container spacing={1}>
-        <Grid item lg={3} md={3} sm={12}>
+      <Row gutter={8}>
+        <Col lg={6} md={6} sm={24}>
           <TextField
             fullWidth
             label="Login ID"
@@ -759,8 +743,8 @@ const AddEditUsers = () => {
             value={searchData.LoginID}
             change={fieldsHandler}
           />
-        </Grid>
-        <Grid item lg={3} md={3} sm={12}>
+        </Col>
+        <Col lg={6} md={6} sm={24}>
           <TextField
             fullWidth
             label="First Name"
@@ -769,8 +753,8 @@ const AddEditUsers = () => {
             value={searchData.FirstName}
             change={fieldsHandler}
           />
-        </Grid>
-        <Grid item lg={3} md={3} sm={12}>
+        </Col>
+        <Col lg={6} md={6} sm={24}>
           <TextField
             fullWidth
             label="Last Name"
@@ -779,8 +763,8 @@ const AddEditUsers = () => {
             value={searchData.LastName}
             change={fieldsHandler}
           />
-        </Grid>
-        <Grid item lg={3} md={3} sm={12}>
+        </Col>
+        <Col lg={6} md={6} sm={24}>
           <SelectBox
             label="Select Role"
             size="small"
@@ -790,8 +774,8 @@ const AddEditUsers = () => {
             value={userRoleValue}
             change={fieldsHandler}
           />
-        </Grid>
-        <Grid item lg={3} md={3} sm={12}>
+        </Col>
+        <Col lg={6} md={6} sm={24}>
           <SelectBox
             label="Select Status"
             size="small"
@@ -801,39 +785,43 @@ const AddEditUsers = () => {
             value={userStatusValue}
             change={fieldsHandler}
           />
-        </Grid>
-        <Grid item md={6} lg={6} sm={12} align="right" className="AddEdit">
-          <Box display="flex">
-            <Box width={1.5 / 8}>
+        </Col>
+        <Col md={12} lg={12} sm={24} className="AddEdit u-text-align-right">
+          <div className="u-display-flex">
+            <div style={{ width: "18.75%" }}>
               <Button
                 applyClass="btnDarkSolid"
                 text="Search"
                 icon={<i className="icon-search icon-size-one"></i>}
                 click={searchHandler}
               />
-            </Box>
-            <Box width={1.5 / 8}>
+            </div>
+            <div className="u-margin-left-10px" style={{ width: "18.75%" }}>
               <Button
                 text="Reset"
                 icon={<Restore />}
-                applyClass="btnSecondarySolid2"
+                applyClass="btnDarkSolid"
                 size="small"
                 click={resetData}
               />
-            </Box>
-          </Box>
-        </Grid>
+            </div>
+          </div>
+        </Col>
 
-        <div style={{ marginTop: "10%" }} />
-        <Grid item md={12} lg={12} sm={12}>
+        <div className="u-margin-top-10pct" />
+        <Col md={24} lg={24} sm={24}>
           <Table
             rows={row}
             columns={columns}
-            pagination={false}
             scroll={{ x: "max-content" }}
+            pagination={{
+              defaultPageSize: 10,
+              showSizeChanger: true,
+              pageSizeOptions: ["5", "10", "20", "30"],
+            }}
           />
-        </Grid>
-      </Grid>
+        </Col>
+      </Row>
 
       {/* modal starts here */}
       <Modal
@@ -846,12 +834,7 @@ const AddEditUsers = () => {
         modalState={isModalVisible}
         width={700}
       >
-        <Box
-          display="flex"
-          justifyContent="center"
-          flexDirection="column"
-          style={{ padding: "40px" }}
-        >
+        <div className="u-padding-40px u-display-flex u-justify-content-center u-flex-direction-column">
           <TextField
             focus
             disable
@@ -860,9 +843,9 @@ const AddEditUsers = () => {
             value={classificationofAdvance.email}
             disabled={true}
           />
-          <div style={{ marginTop: "3%" }} />
-          <Grid container spacing={2}>
-            <Grid item md={6} lg={6} sm={6}>
+          <div className="u-margin-top-3pct" />
+          <Row gutter={16}>
+            <Col md={12} lg={12} sm={12}>
               <SelectBox
                 label="Select Role"
                 name="SelectRole"
@@ -870,8 +853,8 @@ const AddEditUsers = () => {
                 value={userMRole}
                 change={editUserDataHnaler}
               />
-            </Grid>
-            <Grid item md={6} lg={6} sm={6}>
+            </Col>
+            <Col md={12} lg={12} sm={12}>
               <SelectBox
                 label="Select Status"
                 name="SelectStaus"
@@ -879,11 +862,11 @@ const AddEditUsers = () => {
                 value={userMStatus}
                 change={editUserDataHnaler}
               />
-            </Grid>
-          </Grid>
-          <div style={{ marginTop: "7%" }} />
+            </Col>
+          </Row>
+          <div className="u-margin-top-7pct" />
           <GroupedButtons data={editButtonProps} />
-        </Box>
+        </div>
       </Modal>
       {/* a separate modal for edit user prompt */}
       <>
@@ -892,26 +875,14 @@ const AddEditUsers = () => {
           modalState={isModalVisible2}
           width={700}
         >
-          <Box
-            display="flex"
-            justifyContent="center"
-            style={{ padding: "40px" }}
-          >
+          <div className="u-padding-40px u-display-flex u-justify-content-center">
             <div className="icon-update-user icon-size-two"></div>
             <Title level={3} align="center">
               Are you sure you want to update this user?
             </Title>
-          </Box>
-          <div style={{ marginTop: "7%" }} />
+          </div>
+          <div className="u-margin-top-7pct" />
           <GroupedButtons data={buttonProps} />
-          {/* <Box align="center">
-            <Button
-              click={handleProceed}
-              applyClass="btnBorderStyledBeach"
-              text="Proceed"
-              endIcon={<i className="icon-proceed icon-size-one"></i>}
-            />
-          </Box> */}
         </Modal>
       </>
       {/* )} */}

@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from "react";
 import styles from "./style.module.css";
 import TextField from "../InputFields/TextField/text-field";
-import { Box } from "@material-ui/core";
-import { Space } from "antd";
-import Grid from "@material-ui/core/Grid";
-import {NumberFormatCustom,FormattedInputs} from '../FormatedInput/FormatedInput'
+import { Space, Row, Col } from "antd";
+import {FormattedInputs} from '../FormatedInput/FormatedInput'
 const ConsolidateBox = ({
   title,
   disable,
@@ -17,12 +15,8 @@ const ConsolidateBox = ({
 }) => {
   const isDisable = disable && styles.disable;
   return (
-    <Grid
-      container
-      spacing={2}
-      style={{ backgroundColor: "#e7f5f4", padding: "1%" }}
-    >
-      <Grid item lg={4} md={4} sm={12}>
+    <Row gutter={16} className="u-background-color-e7f5f4 u-padding-1pct">
+      <Col lg={8} md={8} sm={24}>
         <div className={styles.sectionConsolidated}>
           <div className={styles.box}>
             <div className={styles.boxHeading + " " + isDisable}>Amount Before Negotiated Settlement</div>
@@ -45,7 +39,7 @@ const ConsolidateBox = ({
                 margin="3px 0px 3px 0px"
                 required
               />
-              <div style={{ marginTop:10}}/>
+              <div className="u-margin-top-10px"/>
               <FormattedInputs
                 name={"ABNSOutstandingNominal"}
                 label={"Outstanding Nominated (Debited Mark-up)"}
@@ -64,7 +58,7 @@ const ConsolidateBox = ({
                 margin="3px 0px 3px 0px"
                 required
               />
-              <div style={{ marginTop:10}}/>
+              <div className="u-margin-top-10px"/>
               <FormattedInputs
                 name={"ABNSOutstandingNonAccural"}
                 value={
@@ -83,8 +77,8 @@ const ConsolidateBox = ({
                 margin="3px 0px 3px 0px"
                 required
               />
-              <div style={{ marginTop:10}}/>
-              <Box display="flex">
+              <div className="u-margin-top-10px"/>
+              <div className="u-display-flex">
                 <Space>
                   <FormattedInputs
                     value={
@@ -123,8 +117,8 @@ const ConsolidateBox = ({
                     required
                   />
                 </Space>
-              </Box>
-              <div style={{ marginTop:10}}/>
+              </div>
+              <div className="u-margin-top-10px"/>
               <FormattedInputs
                 name={"ABNSTotal"}
                 label={"Total"}
@@ -139,8 +133,8 @@ const ConsolidateBox = ({
             </div>
           </div>
         </div>
-      </Grid>
-      <Grid item lg={4} md={4} sm={12}>
+      </Col>
+      <Col lg={8} md={8} sm={24}>
         <div className={styles.sectionConsolidated}>
           <div className={styles.box}>
             <div className={styles.boxHeading + " " + isDisable}>Amount Paid by the Borrower at the time of Settlement</div>
@@ -163,7 +157,7 @@ const ConsolidateBox = ({
                 margin="3px 0px 3px 0px"
                 required
               />
-              <div style={{ marginTop:10}}/>
+              <div className="u-margin-top-10px"/>
               <FormattedInputs
                 value={
                   state
@@ -182,7 +176,7 @@ const ConsolidateBox = ({
                 margin="3px 0px 3px 0px"
                 required
               />
-              <div style={{ marginTop:10}}/>
+              <div className="u-margin-top-10px"/>
               <FormattedInputs
                 value={
                   state
@@ -201,8 +195,8 @@ const ConsolidateBox = ({
                 margin="3px 0px 3px 0px"
                 required
               />
-              <div style={{ marginTop:10}}/>
-              <Box display="flex">
+              <div className="u-margin-top-10px"/>
+              <div className="u-display-flex">
                 <Space>
                   <FormattedInputs
                     value={
@@ -241,8 +235,8 @@ const ConsolidateBox = ({
                     required
                   />
                 </Space>
-              </Box>
-              <div style={{ marginTop:10}}/>
+              </div>
+              <div className="u-margin-top-10px"/>
               <FormattedInputs
                 value={APBSTotal}
                 name={"APBSTotal"}
@@ -257,8 +251,8 @@ const ConsolidateBox = ({
             </div>
           </div>
         </div>
-      </Grid>
-      <Grid item lg={4} md={4} sm={12}>
+      </Col>
+      <Col lg={8} md={8} sm={24}>
         <div className={styles.sectionConsolidated}>
           <div className={styles.box}>
             <div className={styles.boxHeading + " " + isDisable}>Financial Relief Allowed</div>
@@ -281,7 +275,7 @@ const ConsolidateBox = ({
                 margin="3px 0px 3px 0px"
                 required
               />
-              <div style={{ marginTop:10}}/>
+              <div className="u-margin-top-10px"/>
               <FormattedInputs
                 name={"FRANominated"}
                 label={"Nominated"}
@@ -300,7 +294,7 @@ const ConsolidateBox = ({
                 margin="3px 0px 3px 0px"
                 required
               />
-              <div style={{ marginTop:10}}/>
+              <div className="u-margin-top-10px"/>
               <FormattedInputs
                 value={
                   state
@@ -319,8 +313,8 @@ const ConsolidateBox = ({
                 margin="3px 0px 3px 0px"
                 required
               />
-              <div style={{ marginTop:10}}/>
-              <Box display="flex">
+              <div className="u-margin-top-10px"/>
+              <div className="u-display-flex">
                 <Space>
                   <FormattedInputs
                     name={"FRAOtherCharges"}
@@ -340,7 +334,7 @@ const ConsolidateBox = ({
                     margin="3px 0px 3px 0px"
                     required
                   />
-                  <div style={{ marginTop:10}}/>
+                  <div className="u-margin-top-10px"/>
                   <FormattedInputs
                     name={"FRAPenalInterest"}
                     label={"Penal Interest"}
@@ -360,8 +354,8 @@ const ConsolidateBox = ({
                     required
                   />
                 </Space>
-              </Box>
-              <div style={{ marginTop:10}}/>
+              </div>
+              <div className="u-margin-top-10px"/>
               <FormattedInputs
                 value={FRATotal}
                 name={"FRATotal"}
@@ -376,8 +370,8 @@ const ConsolidateBox = ({
             </div>
           </div>
         </div>
-      </Grid>
-    </Grid>
+      </Col>
+    </Row>
   );
 };
 

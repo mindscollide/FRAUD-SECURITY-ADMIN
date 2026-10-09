@@ -1,10 +1,14 @@
 import React, { useRef, useState, useEffect } from "react";
-import { Container, Box, Grid } from "@material-ui/core";
 import styles from "./style.module.css";
-import { Input, Typography } from "antd";
+import { Input, Typography, Row, Col } from "antd";
 import { UserOutlined } from "@ant-design/icons";
-import { Button, Loader, Notification } from "../../../Components/Elements";
-import { useHistory, useRouteMatch, Link } from "react-router-dom";
+import {
+  Button,
+  Loader,
+  Notification,
+  MaxWidthContainer,
+} from "../../../Components/Elements";
+import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { signIn } from "../../../store/actions/auth-actions";
 import Helper from "../../../Common/Functions/history_logout";
@@ -15,8 +19,8 @@ const Login = () => {
   const dispatch = useDispatch();
   const { auth, ui } = state;
   const { Title } = Typography;
-  const history = useHistory();
-  Helper.history = history;
+  const navigate = useNavigate();
+  Helper.navigate = navigate;
   const [credentials, setCredentials] = useState({
     UserName: "",
     Password: "",
@@ -46,13 +50,19 @@ const Login = () => {
 
   const validateHandler = (e) => {
     e.preventDefault();
-    dispatch(signIn(credentials, history));
+    if (credentials.UserName === "" || credentials.Password === "") {
+      setOpen({
+        ...open,
+        open: true,
+        message: "Please fill all fields",
+      });
+    } else {
+      dispatch(signIn(credentials));
+    }
   };
 
-  const route = useRouteMatch();
-  const path = route.path;
-
   useEffect(() => {
+    Helper.navigate = navigate;
     document.body.className = "login-page";
     return () => {
       document.body.className = "";
@@ -60,7 +70,6 @@ const Login = () => {
   }, [credentials]);
   useEffect(() => {
     if (ui.SomeThingWentWrong === true) {
-      console.log("somthing", ui.SomeThingWentWrong);
       setOpen({
         ...open,
         open: true,
@@ -74,13 +83,12 @@ const Login = () => {
       UserIDInput.current.focus();
     }
   }, [UserIDInput]);
-  console.log("auth.Loading", auth.Loading);
   useEffect(() => {
     if (
       auth.SessionExpeireResponseMessage !== "" &&
-      auth.SessionExpeireResponseMessage !== undefined
+      auth.SessionExpeireResponseMessage !== undefined &&
+      auth.SessionExpeireResponseMessage !== null
     ) {
-      console.log("hi", ui.SessionExpeireResponseMessage);
       setOpen({
         ...open,
         open: true,
@@ -94,25 +102,22 @@ const Login = () => {
       });
     }
   }, [auth.SessionExpeireResponseMessage]);
-  let styleLoader = "authenticationLoaderStyle";
+
   return (
-    <Container maxWidth="lg">
-      {auth.Loading ? <Loader loaderstyle={styleLoader} /> : null}
-      <Notification setOpen={setOpen} open={open.open} message={open.message} />
+    <MaxWidthContainer>
       <form onSubmit={(e) => validateHandler(e)}>
-        <Box display="flex" alignItems="center" style={{ height: "100vh" }}>
-          <Grid container spacing={5}>
-            <Grid item lg={6} md={6} sm={12}></Grid>
-            <Grid item lg={6} md={6} sm={12} align="right">
-              <Box className={styles.loginBody}>
-                <Title
-                  level={3}
-                  style={{ color: "white", textAlign: "center", marginTop: 10 }}
-                >
-                  Fraud Digitization
+        <div
+          className={`${styles.boxHeightLogin} u-display-flex u-align-items-center`}
+        >
+          <Row justify="end" style={{ width: "100%" }}>
+            <Col lg={12} md={12} sm={24}></Col>
+            <Col lg={12} md={12} sm={24} className="u-text-align-right">
+              <div className={styles.loginBody}>
+                <Title level={3} className={styles.fraudMainTitle}>
+                  Fraud Digitization Portal
                 </Title>
-                <div style={{ marginTop: "6%" }} />
-                <Title level={5} style={{ color: "white", textAlign: "left" }}>
+                <div className={styles.margin6p} />
+                <Title level={5} className={styles.labelLogin}>
                   User ID
                 </Title>
 
@@ -126,53 +131,45 @@ const Login = () => {
                   ref={UserIDInput}
                   autoComplete="off"
                 />
-                <div style={{ marginTop: "5%" }} />
-                <Title level={5} style={{ color: "white", textAlign: "left" }}>
+                <div className={styles.margin6p} />
+                <Title level={5} className={styles.labelLogin}>
                   Password
                 </Title>
                 <Input
-                  // type="password"
                   name="Password"
                   size="large"
                   placeholder="password"
                   onChange={setCredentialHandler}
-                  // value={credentials.fakePassword}
                   autoComplete="off"
-                  style={{
-                    webkitTextSecurity: "disc",
-                  }}
+                  className={styles.passwordInputField}
                   type="text"
-                  // value={credentials.Password}
-                  // autoComplete="off"
                 />
 
                 {!auth.isLoggedIn && auth.ResponseMessage !== "" ? (
-                  <Box align="center">
+                  <div className="u-text-align-center">
                     <div className={styles.error + " " + styles.fade}>
                       {auth.ResponseMessage}
                     </div>
-                  </Box>
+                  </div>
                 ) : null}
 
-                <div style={{ marginTop: "10%" }} />
-                <Box
-                  align="center"
-                  display="flex"
-                  justifyContent="space-evenly"
-                >
+                <div className={styles.margin10p} />
+                <div className="u-text-align-center u-display-flex u-justify-content-space-evenly">
                   <Button
                     applyClass="btnBorderStyled"
                     text="Login"
                     endIcon={<i className="icon-login icon-size-one"></i>}
                     type="submit"
                   />
-                </Box>
-              </Box>
-            </Grid>
-          </Grid>
-        </Box>
+                </div>
+              </div>
+            </Col>
+          </Row>
+        </div>
       </form>
-    </Container>
+      <Notification setOpen={setOpen} open={open.open} message={open.message} />
+      {auth.Loading ? <Loader /> : null}
+    </MaxWidthContainer>
   );
 };
 

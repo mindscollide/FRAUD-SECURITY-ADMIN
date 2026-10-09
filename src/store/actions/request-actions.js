@@ -11,7 +11,6 @@ import {
   editUserDataForAdmin,
 } from "../../Common/Api/apis-config";
 import { SomeThingWentWrong } from "./ui-actions";
-import Helper from "../../Common/Functions/history_logout";
 import { refreshToken } from "../actions/auth-actions";
 
 const newRequestListSuccess = (response, message) => {
@@ -152,7 +151,6 @@ const LOADER = () => {
 };
 // APIS
 const newRequestList = (UserData) => {
-  let history = Helper.history;
   let Data = {
     UserID: UserData,
   };

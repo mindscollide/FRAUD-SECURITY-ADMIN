@@ -30,8 +30,8 @@
 //     <>
     
 //       <div className="steps-content">{steps[current].content}</div>
-//       <div className="steps-action" style={{ textAlign: "center" }}>
-//       <div style={{marginTop:"15%"}}/>
+//       <div className="steps-action u-text-align-center">
+//       <div className="u-margin-top-15pct"/>
 //         {current < steps.length - 1 && (
 //           <CustomButton
 //             click={() => next()}

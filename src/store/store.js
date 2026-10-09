@@ -1,6 +1,4 @@
-import { createStore, applyMiddleware, combineReducers } from "redux";
-import thunk from "redux-thunk";
-import { composeWithDevTools } from "redux-devtools-extension";
+import { configureStore, combineReducers } from "@reduxjs/toolkit";
 import {
   authReducer,
   reportsReducer,
@@ -9,12 +7,13 @@ import {
   requestReducer,
 } from "./reducers/index";
 import * as actions from "./action_types";
+
 const AppReducer = combineReducers({
   auth: authReducer,
   requestReducer: requestReducer,
   reports: reportsReducer,
   ui: uiReducers,
-  setupForms: setupFormsReducer
+  setupForms: setupFormsReducer,
 });
 const rootReducer = (state, action) => {
   // when a logout action is dispatched it will reset redux state
@@ -23,11 +22,16 @@ const rootReducer = (state, action) => {
   }
   return AppReducer(state, action);
 };
-const store = createStore(
-  rootReducer,
-  composeWithDevTools(
-    applyMiddleware(thunk)
-  )
-);
+const store = configureStore({
+  reducer: rootReducer,
+  // This codebase predates Redux Toolkit and stores non-serializable values
+  // in state — disable the dev-only checks that would otherwise flag those
+  // on every action.
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: false,
+      immutableCheck: false,
+    }),
+});
 
 export default store;

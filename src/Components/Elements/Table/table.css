@@ -1,6 +1,6 @@
 .disabled-row {
   background-color: red;
-  pointer-events: none;
+  pointer-events  : none;
 }
 
 .rowColor {

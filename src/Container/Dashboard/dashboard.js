@@ -6,9 +6,12 @@ import { UserSelection } from "../../Routes/routingData";
 import { Loader } from "../../Components/Elements";
 import { useSelector, useDispatch } from "react-redux";
 import { SomeThingWentWrongRemove } from "../../store/actions/ui-actions";
+import { useNavigate } from "react-router-dom";
+import Helper from "../../Common/Functions/history_logout";
 const Dashboard = () => {
   const state = useSelector((state) => state);
-
+  const navigate = useNavigate();
+  Helper.navigate = navigate;
   const {
     reports,
     auth,
@@ -60,13 +63,13 @@ const Dashboard = () => {
   const [AppContent, setAppContent] = useState(UserSelection(token, role));
   return (
     <>
-      <Layout>
+      <Layout style={Style.Shell}>
         <Header
           title={"Fraud Security Administrator"}
           UserDetails={UserDetails}
           Notification={AppContent.Notification}
         />
-        <Content style={Style.MainContainer}>
+        <Content>
           <Layout>
             <Sidebar Links={AppContent.SidebarData} ui={ui} />
             <Main
@@ -86,10 +89,12 @@ const Dashboard = () => {
   );
 };
 const Style = {
-  MainContainer: {
-    position: "relative",
-    marginTop: "30px",
-    paddingLeft: `230px`,
+  // Header/Sidebar/Main/Footer are all fixed-positioned (see their own
+  // CSS), so this just pins the shell to exactly one viewport and never
+  // grows the page/body height — no page-level scrollbar.
+  Shell: {
+    height: "100vh",
+    overflow: "hidden",
   },
 };
 export default Dashboard;

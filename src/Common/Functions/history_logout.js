@@ -1,5 +1,4 @@
 class Helper {
-    static history = null;
-  }
-  export default Helper;
-  
+  static navigate = null;
+}
+export default Helper;

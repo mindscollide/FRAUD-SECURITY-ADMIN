@@ -1,10 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { Input, Typography, Space } from "antd";
-import { Grid, Box, Container } from "@material-ui/core";
+import { Input, Typography, Space, Row, Col } from "antd";
 import { useDispatch, useSelector } from "react-redux";
-import styles from "./custom-css.css";
-import MultiStep from "../../../../Components/Elements/MultiStep/multi-step";
-import AddIcon from "@material-ui/icons/Add";
+import "./custom-css.css";
 import {
   saveUserBySecurityAdmin,
   rejectUserBySecurityAdmin,
@@ -149,9 +146,8 @@ const CreateEditRoles = () => {
       width: "15%",
       render: (text, row) => (
         <div
-          style={{ cursor: "pointer" }}
           onClick={() => showAcceptModal(row)}
-          className="icon-add icon-size-one greenTick"
+          className="icon-add icon-size-one greenTick u-cursor-pointer"
         />
       ),
     },
@@ -163,9 +159,8 @@ const CreateEditRoles = () => {
       width: "15%",
       render: (text, row) => (
         <div
-          style={{ cursor: "pointer" }}
           onClick={() => showRejectModal(row)}
-          className="icon-trash icon-size-one pdfRed"
+          className="icon-trash icon-size-one pdfRed u-cursor-pointer"
         />
       ),
     },
@@ -245,17 +240,17 @@ const CreateEditRoles = () => {
       <Title className="CreateUserTitle" level={3}>
         Create User
       </Title>
-      <Grid container spacing={1}>
-        <div style={{ marginTop: "10%" }} />
-        <Grid item md={12} lg={12} sm={12}>
+      <Row gutter={8}>
+        <div className="u-margin-top-10pct" />
+        <Col md={24} lg={24} sm={24}>
           <Table
             rows={rows}
             columns={columns}
             pagination={false}
             scroll={{ x: "max-content" }}
           />
-        </Grid>
-      </Grid>
+        </Col>
+      </Row>
       {console.log(actions.add)}
       {/* modal starts here */}
       <Modal
@@ -272,42 +267,38 @@ const CreateEditRoles = () => {
         {actions.add && (
           <>
             <Title level={3} align="center">Are you sure you want to create a new user?</Title>
-            <div style={{ padding: "15px" }} />
-            <Grid container spacing={1}>
-              <Grid item md={3} lg={3} sm={12}></Grid>
-              <Grid item md={8} lg={8} sm={12}>
-                <Box display="flex">
-                  <Box width={2 / 6}>
+            <div className="u-padding-15px" />
+            <Row gutter={8}>
+              <Col md={6} lg={6} sm={24}></Col>
+              <Col md={16} lg={16} sm={24}>
+                <div className="u-display-flex">
+                  <div className="u-width-33_333pct">
                     <Button
                       applyClass="buttonPrimary3"
                       text="Proceed"
                       icon={<i className="icon-check icon-size-one "></i>}
                       click={createUser}
                     />
-                  </Box>
-                  <div style={{ margin: "0 5px 0 5px" }} />
-                  <Box width={2 / 6}>
+                  </div>
+                  <div className="u-margin-0-5px-0-5px" />
+                  <div className="u-width-33_333pct">
                     <Button
                       applyClass="btnBorderStyledRed"
                       text="discard"
                       icon={<i className="icon-close icon-size-one"></i>}
                       click={handleCancel}
                     />
-                  </Box>
-                </Box>
-              </Grid>
-            </Grid>
+                  </div>
+                </div>
+              </Col>
+            </Row>
           </>
         )}
         {actions.edit && (
           <>
-            <Box
-              display="flex"
-              justifyContent="center"
-              style={{ padding: "40px" }}
-            >
-              <p className="m-0" style={{ color: "#b27706" }}>
-                Type your Comments<span style={{ color: "#ce0000" }}>*</span>
+            <div className="u-display-flex u-justify-content-center u-padding-40px">
+              <p className="m-0 u-color-b27706">
+                Type your Comments<span className="u-color-ce0000">*</span>
               </p>
               <TextField
                 multiline
@@ -318,12 +309,12 @@ const CreateEditRoles = () => {
                 fullWidth
                 name="Comments"
               />
-            </Box>
-            <Grid container spacing={1}>
-              <Grid item md={4} lg={4} sm={12}></Grid>
-              <Grid item md={8} lg={8} sm={12}>
-                <Box display="flex">
-                  <Box width={2 / 6}>
+            </div>
+            <Row gutter={8}>
+              <Col md={8} lg={8} sm={24}></Col>
+              <Col md={16} lg={16} sm={24}>
+                <div className="u-display-flex">
+                  <div className="u-width-33_333pct">
                     <Button
                       applyClass="buttonPrimary3"
                       text="Proceed "
@@ -331,9 +322,9 @@ const CreateEditRoles = () => {
                       click={rejectUser}
                       disableBtn={btnDisabled}
                     />
-                  </Box>
-                  <div style={{ margin: "0 5px 0 5px" }} />
-                  <Box width={2 / 6}>
+                  </div>
+                  <div className="u-margin-0-5px-0-5px" />
+                  <div className="u-width-33_333pct">
                     <Button
                       applyClass="btnBorderStyledRed"
                       text="discard "
@@ -342,10 +333,10 @@ const CreateEditRoles = () => {
                       click={handleCancel}
                       // disableBtn={btnDisabled}
                     />
-                  </Box>
-                </Box>
-              </Grid>
-            </Grid>
+                  </div>
+                </div>
+              </Col>
+            </Row>
           </>
         )}
       </Modal>

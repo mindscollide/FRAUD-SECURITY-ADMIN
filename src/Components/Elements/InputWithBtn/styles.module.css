@@ -5,7 +5,14 @@
   box-shadow: none !important;
   height: 40px !important;
 }
-
+.search2 {
+  background: #dfe8e8 !important;
+  color: #078480 !important;
+  border: 1 solid black !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  height: 38px !important;
+}
 .search {
   background: #dfe8e8 !important;
   color: #078480 !important;
@@ -13,6 +20,23 @@
   border-radius: 0 !important;
   box-shadow: none !important;
   height: 40px !important;
+}
+.search-cnic {
+  color: #fff !important;
+    background: #00302e !important;
+  /* background: #dfe8e8 !important;
+  color: #078480 !important; */
+  border: 1 solid black !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  height: 40px !important;
+}
+.search-cnic:hover{
+  background: rgb(11, 161, 155) !important;
+  transition: all 0.3s ease-in 0s;
+}
+.search-cnic {
+  margin: 0 !important;
 }
 
 .next {
@@ -22,4 +46,18 @@
   box-shadow: none !important;
   height: 40px !important;
   width: 20% !important;
+}
+.btnSecondarySolidAddMoreComment{
+  background    : #d08b07 !important;
+  border-color  : #d08b07 !important;
+  cursor        : pointer !important;
+  border-radius : 0px !important;
+  font-weight   : 400 !important;
+  height        : 40px !important;
+  color         : #fff !important;
+  text-transform: none !important;
+  box-shadow    : none !important;
+  text-transform: none !important;
+  letter-spacing: 0.02857em!important;
+  white-space: nowrap !important;;
 }

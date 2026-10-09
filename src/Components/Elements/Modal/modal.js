@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Modal, Button } from "antd";
 
-const CustomModal = ({ modalTitle, children, modalState, closeModal,width,padding }) => {
+const CustomModal = ({ closable, modalTitle, children, modalState, closeModal,width,padding }) => {
   return (
     <>
       {/* <Button type="primary" onClick={showModal}>
@@ -15,6 +15,7 @@ const CustomModal = ({ modalTitle, children, modalState, closeModal,width,paddin
         footer={null}
         onCancel={closeModal}
         width={width}
+        closable={false}
       >
         {children}
       </Modal>

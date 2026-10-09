@@ -1,18 +1,25 @@
 import "./App.less";
-import { Switch, Route, Redirect } from "react-router-dom";
-import Login from "./Container/Authentication/Login/Login";
-import Dashboard from "./Container/Dashboard/dashboard";
-import NotFound from "./Container/404/404";
 import PrivateRoute from "./Routes/PrivateRoute";
+import { Routes, Route, Navigate } from "react-router-dom";
+import Login from "./Container/Authentication/Login/Login";
+import NotFound from "./Container/404/404";
+import Dashboard from "./Container/Dashboard/dashboard";
 const App = () => {
   return (
     <>
-      <Switch>
-        <Route exact path="/" component={Login} />
-        <PrivateRoute path="/Fraud" component={Dashboard} />
-        <Route path='*' exact={true} component={NotFound} />
-        <Redirect from='*' to='/404' />
-      </Switch>
+      <Routes>
+        <Route path="/" element={<Login />} />
+        <Route
+          path="/Fraud/*"
+          element={
+            <PrivateRoute>
+              <Dashboard />
+            </PrivateRoute>
+          }
+        />
+        <Route path="/404" element={<NotFound />} />
+        <Route path="*" element={<Navigate to="/404" replace />} />
+      </Routes>
     </>
   );
 };

@@ -47,7 +47,8 @@ const refrshtokenSuccess = (response, message) => {
     message: message,
   };
 };
-const signIn = (UserData, history) => {
+const signIn = (UserData) => {
+  let navigate = Helper.navigate;
   var min = 10000;
   var max = 90000;
   var id = min + Math.random() * (max - min);
@@ -96,7 +97,7 @@ const signIn = (UserData, history) => {
             );
 
             await dispatch(getAllUserData(searchData));
-            history.push("/Fraud/SecurityAdmin/AddEditUsers");
+            navigate("/Fraud/SecurityAdmin/AddEditUsers");
           } else {
             dispatch(
               signinFail(
@@ -122,7 +123,6 @@ const signIn = (UserData, history) => {
 const refreshToken = (props) => {
   console.log("refreshToken");
 
-  let history = Helper.history;
   let Token = JSON.parse(localStorage.getItem("token"));
   let RefreshToken = JSON.parse(localStorage.getItem("refreshToken"));
   let Data = {
@@ -161,7 +161,7 @@ const refreshToken = (props) => {
           let message = "Your Session has expired";
           // history.push("/");
           console.log("logout");
-          dispatch(signOut(history, message));
+          dispatch(signOut(message));
         }
       })
       .catch((response) => {
@@ -169,8 +169,8 @@ const refreshToken = (props) => {
       });
   };
 };
-const signOut = (history, message) => {
-  history.push("/");
+const signOut = (message) => {
+  Helper.navigate("/");
   if (message !== "") {
     return {
       type: actions.SIGN_OUT,

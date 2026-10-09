@@ -5,7 +5,6 @@ import ReactHTMLTableToExcel from "react-html-table-to-excel";
 function ExportToExcel({ btnText, id, fileName }) {
   useEffect(() => {
     let el = document.getElementById("test-table-xls-button");
-    console.log(el);
   }, []);
   return (
     <ReactHTMLTableToExcel
