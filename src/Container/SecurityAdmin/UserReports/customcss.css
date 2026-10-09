@@ -1,0 +1,17 @@
+h3.UserReportsTitle {
+  margin-bottom: 25px !important;
+}
+
+.MuiGrid-root.ButtonSection .MuiBox-root {
+  justify-content: center !important;
+  margin-top: 10px;
+}
+
+h3.UserStatusTitle {
+    margin-bottom: 15px !important;
+    margin-top: 25px !important;
+  }
+
+button.MuiButtonBase-root.downloadButton {
+    height: 35px !important;
+}
