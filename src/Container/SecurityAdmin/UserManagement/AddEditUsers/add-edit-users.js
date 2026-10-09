@@ -27,8 +27,8 @@ import {
 } from "../../../../store/actions/request-actions";
 const AddEditUsers = () => {
   const { Title } = Typography;
-  const state = useSelector((state) => state);
-  const { requestReducer, ui } = state;
+  const requestReducer = useSelector((state) => state.requestReducer);
+  const ui = useSelector((state) => state.ui);
   const dispatch = useDispatch();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isModalVisible2, setIsModalVisible2] = useState(false);

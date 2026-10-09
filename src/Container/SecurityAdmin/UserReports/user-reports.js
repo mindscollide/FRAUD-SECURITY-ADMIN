@@ -31,9 +31,8 @@ const UserReports = () => {
   const { Title } = Typography;
   const dispatch = useDispatch();
   let styleLoader = "authenticationLoaderStyle";
-  const state = useSelector((state) => state);
+  const reports = useSelector((state) => state.reports);
 
-  const { reports } = state;
   const [open, setOpen] = useState({
     flag: false,
     message: "",

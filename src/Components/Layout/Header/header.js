@@ -6,7 +6,7 @@ import Logo from "../../../assets/images/logo.png";
 import { useDispatch, useSelector } from "react-redux";
 import { signOut } from "../../../store/actions/auth-actions";
 import "./header.css";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 import Helper from "../../../Common/Functions/history_logout";
 import { disableGoBack } from "../../../store/actions/ui-actions";
 import {
@@ -18,9 +18,9 @@ import { makeTabAvtive } from "../../../store/actions/ui-actions";
 
 const Header = ({ Notification, title, UserDetails }) => {
   const navigate = useNavigate();
-  const state = useSelector((state) => state);
+  const requestReducer = useSelector((state) => state.requestReducer);
+  const ui = useSelector((state) => state.ui);
   const dispatch = useDispatch();
-  const { requestReducer, ui } = state;
   const { Title } = Typography;
   const { Header } = Layout;
   const Details = JSON.parse(localStorage.getItem("UserDetails"));

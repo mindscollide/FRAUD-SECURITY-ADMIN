@@ -8,16 +8,16 @@ import {
   Notification,
   MaxWidthContainer,
 } from "../../../Components/Elements";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import { signIn } from "../../../store/actions/auth-actions";
 import Helper from "../../../Common/Functions/history_logout";
 
 const Login = () => {
-  const state = useSelector((state) => state);
+  const auth = useSelector((state) => state.auth);
+  const ui = useSelector((state) => state.ui);
   const UserIDInput = useRef(null);
   const dispatch = useDispatch();
-  const { auth, ui } = state;
   const { Title } = Typography;
   const navigate = useNavigate();
   Helper.navigate = navigate;

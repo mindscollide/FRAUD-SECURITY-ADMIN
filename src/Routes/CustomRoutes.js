@@ -1,4 +1,4 @@
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes } from "react-router";
 import { useDispatch } from "react-redux";
 import React, { useEffect } from "react";
 import { setRoutingData } from "../store/actions/setup-forms-actions";

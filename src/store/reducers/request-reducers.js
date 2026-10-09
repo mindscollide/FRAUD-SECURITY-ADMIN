@@ -142,7 +142,9 @@ const requestReducer = (state = initialState, action) => {
         ResponseMessage: action.message,
       };
     default:
-      return { ...state };
+      // unchanged reference for actions this slice doesn't handle, so
+      // useSelector(state => state.<slice>) doesn't re-render needlessly
+      return state;
   }
 };
 

@@ -1,7 +1,11 @@
 import React from "react";
 import { DatePicker } from "antd";
-import moment from "moment";
+import dayjs from "dayjs";
+import customParseFormat from "dayjs/plugin/customParseFormat";
 import styles from "../floating-label.module.css";
+
+// lets dayjs parse "DD-MM-YYYY"-style strings with an explicit format
+dayjs.extend(customParseFormat);
 const CustomDatePicker = ({
   label,
   width,
@@ -20,7 +24,7 @@ const CustomDatePicker = ({
   }
 
   const disabledDate = (value) => {
-    return value && value > moment().endOf("day");
+    return value && value > dayjs().endOf("day");
   };
   return (
     <>
@@ -31,7 +35,7 @@ const CustomDatePicker = ({
           disabledDate={DateRange ? disabledDate : false}
           disabled={disable}
           format={dateFormat}
-          value={value ? moment(value, dateFormat) : null}
+          value={value ? dayjs(value, dateFormat) : null}
           placeholder={placeholder}
           onChange={onChange}
           size={size}

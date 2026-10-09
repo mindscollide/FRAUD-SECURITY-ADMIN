@@ -1,4 +1,6 @@
-@import "antd/dist/antd.less";
+// antd v5 is CSS-in-JS: no antd.less import. Theme tokens live in
+// src/theme.js (ConfigProvider), base styles come from antd/dist/reset.css
+// (imported in src/index.js).
 // @import url("https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,600;0,700;0,800;1,300;1,400;1,600;1,700;1,800&display=swap");
 // @import url("https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,600;0,700;0,800;1,300;1,400;1,600;1,700;1,800&display=swap");
 // all global styles are witten here
@@ -57,59 +59,52 @@
 
 // Select (SelectBox/SelectBoxWithButton/MultipleSelectCheckmarks Elements
 // wrappers) — same border/background convention as the inputs/pickers above.
-// The visible box is .ant-select-selector, not .ant-select itself.
-.ant-select-selector {
+// antd v6: the visible box is the .ant-select root itself (v4/v5 drew it on a
+// child .ant-select-selector, which no longer exists).
+.ant-select {
   border          : 1px solid #dee6e6 !important;
   border-radius   : 0 !important;
   box-shadow      : none !important;
   background-color: white !important;
 }
 
-.ant-select:hover .ant-select-selector {
+.ant-select:hover {
   border-color: #dee6e6 !important;
 }
 
-.ant-select-focused .ant-select-selector {
+.ant-select-focused {
   border-color: #12B0E8 !important;
   box-shadow  : none !important;
 }
 
 // MultipleSelectCheckmarks (Transaction Type etc.) collapses every selected
 // tag into one comma-joined string via maxTagPlaceholder, rendered through
-// this same "overflow item" that normally holds individual tag pills. Left
-// to wrap, a long selection list wraps onto multiple lines and grows the
-// box taller instead of staying a fixed 40px like every other field —
-// forcing it to one line with an ellipsis keeps the height fixed.
-.ant-select-multiple .ant-select-selector {
+// the same overflow item that normally holds individual tag pills. Left to
+// wrap, a long selection grows the box taller instead of staying a fixed
+// 40px like every other field — force one line with an ellipsis.
+// (v6 names: .ant-select-content / .ant-select-content-item.)
+.ant-select-multiple .ant-select-content {
   flex-wrap: nowrap !important;
   overflow : hidden !important;
 }
 
-.ant-select-selection-overflow {
-  flex-wrap: nowrap !important;
+.ant-select-content-item {
+  overflow : hidden !important;
+  max-width: 100%;
 }
 
-.ant-select-selection-overflow-item {
+.ant-select-content-item .ant-select-selection-item {
   overflow     : hidden !important;
   max-width    : 100%;
-}
-
-.ant-select-selection-overflow-item .ant-select-selection-item {
-  overflow     : hidden !important;
-  max-width    : 100%;
-}
-
-.ant-select-selection-item-content {
-  overflow     : hidden !important;
   text-overflow: ellipsis !important;
   white-space  : nowrap !important;
 }
 
-// Notification Elements wrapper — antd's own .ant-notification-notice-message
+// Notification Elements wrapper — antd's own .ant-notification-notice-title
 // rule sets an explicit (dark) text color that wins over the teal
 // background's inherited color otherwise; !important here matches that
 // same specificity fight.
-.app-teal-notification .ant-notification-notice-message,
+.app-teal-notification .ant-notification-notice-title,
 .app-teal-notification .ant-notification-notice-close {
   color: #fff !important;
 }
@@ -161,10 +156,6 @@
   width: 100% !important;
 }
 
-.ant-select-selector {
-  background-color: #fff !important;
-}
-
 .ant-menu-submenu-title {
   color           : #80b1af !important;
   background-color: inherit !important;
@@ -189,28 +180,6 @@
 
 .ant-menu-item-only-child:hover {
   color: #fff !important;
-}
-
-.ant-select-arrow {
-  display                : inline-block;
-  color                  : inherit;
-  font-style             : normal;
-  line-height            : 0;
-  text-transform         : none;
-  vertical-align         : -0.125em;
-  text-rendering         : optimizeLegibility;
-  -webkit-font-smoothing : antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  position               : absolute;
-  top                    : 80%;
-  right                  : 10px;
-  height                 : 12px;
-  margin-top             : -15px;
-  color                  : rgba(0, 0, 0, 0.25);
-  font-size              : 12px;
-  line-height            : 1;
-  text-align             : center;
-  pointer-events         : none;
 }
 
 .ant-layout-sider.ant-layout-sider-dark {
@@ -566,4 +535,12 @@ p.description-error {
 
 .padding40px {
   padding: 40px;
+}
+
+// antd v5 sizes buttons with a fixed `height` and no vertical padding, so the
+// `height: 100% !important` used by Button/button.module.css classes
+// collapses them to their line-height (~32px). v4 large buttons were 40px;
+// a min-height restores that without touching the shared button classes.
+.ant-btn.ant-btn-lg {
+  min-height: 40px;
 }

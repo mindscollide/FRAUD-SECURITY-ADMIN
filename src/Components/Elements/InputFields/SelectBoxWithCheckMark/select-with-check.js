@@ -41,13 +41,13 @@ export default function MultipleSelectCheckmarks({
         disabled={disable}
         style={{ width: "100%" }}
         listHeight={224}
-        dropdownMatchSelectWidth={250}
+        popupMatchSelectWidth={250}
         // Collapses every selected tag into one plain comma-joined string
         // (matching MUI's old renderValue) instead of antd's default
         // per-item tag pills.
         maxTagCount={0}
         maxTagPlaceholder={() => selected.join(", ")}
-        dropdownRender={(menu) => (
+        popupRender={(menu) => (
           // onMouseDown/preventDefault on the whole block, not just each
           // row, stops antd's Select from treating any click in here as a
           // blur-and-close — without it the dropdown closed before the

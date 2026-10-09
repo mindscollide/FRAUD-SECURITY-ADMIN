@@ -1,6 +1,6 @@
 import "./App.less";
 import PrivateRoute from "./Routes/PrivateRoute";
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router";
 import Login from "./Container/Authentication/Login/Login";
 import NotFound from "./Container/404/404";
 import Dashboard from "./Container/Dashboard/dashboard";

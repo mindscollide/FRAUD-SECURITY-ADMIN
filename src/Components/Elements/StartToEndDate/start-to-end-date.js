@@ -1,7 +1,11 @@
 import React from "react";
 import { DatePicker } from "antd";
-import moment from "moment";
+import dayjs from "dayjs";
+import customParseFormat from "dayjs/plugin/customParseFormat";
 import styles from "../floating-label.module.css";
+
+// lets dayjs parse "DD-MM-YYYY"-style strings with an explicit format
+dayjs.extend(customParseFormat);
 const StartToEndDate = ({
   label,
   width,
@@ -24,7 +28,7 @@ const StartToEndDate = ({
   };
   const disabledDate = (value) => {
     // Can not select future dates
-    return value && value > moment().endOf("day");
+    return value && value > dayjs().endOf("day");
   };
   return (
     <div className={`${label ? styles.wrapper : undefined} u-display-flex u-align-items-center`}>
@@ -34,7 +38,7 @@ const StartToEndDate = ({
         onChange={picker}
         value={
           startvalue && endvalue
-            ? [moment(startvalue, dateFormat), moment(endvalue, dateFormat)]
+            ? [dayjs(startvalue, dateFormat), dayjs(endvalue, dateFormat)]
             : null
         }
         format={dateFormat}

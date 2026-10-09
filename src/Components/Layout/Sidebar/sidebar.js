@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from "react";
 import styles from "./sidebar.module.css";
 import { Layout, Menu } from "antd";
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 import { useDispatch } from "react-redux";
 import { makeTabDisable } from "../../../store/actions/ui-actions";
 
 const Sidebar = ({ Links, ui }) => {
-  const { SubMenu } = Menu;
   const { Sider } = Layout;
   const dispatch = useDispatch();
   // Sidebar only ever mounts under /Fraud (see App.js) and isn't rendered
@@ -57,6 +56,25 @@ const Sidebar = ({ Links, ui }) => {
     setSelectedKey(key);
   };
 
+  // antd v5 builds the menu from an `items` array (SubMenu/Menu.Item
+  // children are deprecated). Keys are unchanged: "sub1", "sub2", ... for
+  // parents and Links.js keys for children, so localStorage parent/child
+  // selection still lines up.
+  const menuItems = Links.map((item, index) => ({
+    key: `sub${index + 1}`,
+    icon: <i className={`${item.icon}`}></i>,
+    label: `${item.menuName}`,
+    className: styles.menuMainItem,
+    children: item.subMenu.map((nestedItem) => ({
+      key: String(nestedItem.key),
+      label: (
+        <Link to={`${path}${nestedItem.link}`} className={styles.noLinkStyles}>
+          {nestedItem.name}
+        </Link>
+      ),
+    })),
+  }));
+
   return (
     <Sider width={230} className={styles.sider}>
       <Menu
@@ -66,31 +84,8 @@ const Sidebar = ({ Links, ui }) => {
         onOpenChange={onOpenChange}
         onSelect={onSelect}
         className={styles.menuSidebarStyle}
-      >
-        {Links.length > 0
-          ? Links.map((item, index) => (
-              <SubMenu
-                key={`sub${index + 1}`}
-                icon={<i className={`${item.icon}`}></i>}
-                title={`${item.menuName}`}
-                className={styles.menuMainItem}
-              >
-                {item
-                  ? item.subMenu.map((nestedItem) => (
-                      <Menu.Item key={nestedItem.key}>
-                        <Link
-                          to={`${path}${nestedItem.link}`}
-                          className={styles.noLinkStyles}
-                        >
-                          {nestedItem.name}
-                        </Link>
-                      </Menu.Item>
-                    ))
-                  : null}
-              </SubMenu>
-            ))
-          : null}
-      </Menu>
+        items={menuItems}
+      />
     </Sider>
   );
 };

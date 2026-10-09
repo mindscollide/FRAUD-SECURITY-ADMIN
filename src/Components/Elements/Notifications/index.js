@@ -27,7 +27,8 @@ const Notification = ({ setOpen, open, message }) => {
   useEffect(() => {
     if (open && message !== "") {
       notification.open({
-        message,
+        // antd v6 renamed the notice's `message` field to `title`
+        title: message,
         placement: "topRight",
         duration: 2,
         // The original MUI Alert always rendered with a hardcoded teal
@@ -35,7 +36,7 @@ const Notification = ({ setOpen, open, message }) => {
         // (a pre-existing bug — the classes.BackGroundSucces override always
         // won) — preserved exactly rather than "corrected" to show red.
         // className (not just style) is needed because antd's own
-        // .ant-notification-notice-message rule sets an explicit text color
+        // .ant-notification-notice-title rule sets an explicit text color
         // that would otherwise win over an inherited one from style={}.
         className: "app-teal-notification",
         style: {

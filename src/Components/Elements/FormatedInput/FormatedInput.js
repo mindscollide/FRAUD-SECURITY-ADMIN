@@ -1,6 +1,6 @@
 import React from "react";
 import { Input } from "antd";
-import NumberFormat from "react-number-format";
+import { NumericFormat } from "react-number-format";
 import styles from "../floating-label.module.css";
 
 export const FormattedInputs = ({
@@ -36,13 +36,13 @@ export const FormattedInputs = ({
             {required ? <span style={{ color: "red" }}> *</span> : null}
           </span>
         ) : null}
-        {/* react-number-format's customInput renders antd's Input as the
+        {/* react-number-format v5's NumericFormat (NumberFormat in v4); customInput renders antd's Input as the
             actual DOM element and handles all ref-forwarding internally —
             this replaces the previous MUI TextField + inputComponent +
             hand-built forwardRef/inputRef-stripping dance entirely, rather
             than porting it (that plumbing caused a real crash earlier in
             this migration and was fragile). */}
-        <NumberFormat
+        <NumericFormat
           customInput={Input}
           thousandsGroupStyle="thousand"
           decimalSeparator="."

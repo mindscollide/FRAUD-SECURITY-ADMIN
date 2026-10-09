@@ -20,8 +20,8 @@ import {
 const CreateEditRoles = () => {
   const { Title } = Typography;
   const dispatch = useDispatch();
-  const state = useSelector((state) => state);
-  const { requestReducer, ui } = state;
+  const requestReducer = useSelector((state) => state.requestReducer);
+  const ui = useSelector((state) => state.ui);
   const [showUrduContent, setShowUrduContent] = useState(false);
   const [btnDisabled, setBtnDisabled] = useState(true);
   const [rejectionComment, setRejectionComment] = useState("");

@@ -1,7 +1,11 @@
 import React from "react";
 import { TimePicker } from "antd";
-import moment from "moment"
+import dayjs from "dayjs";
+import customParseFormat from "dayjs/plugin/customParseFormat";
 import styles from "../floating-label.module.css";
+
+// lets dayjs parse "DD-MM-YYYY"-style strings with an explicit format
+dayjs.extend(customParseFormat);
 const CustomTimePicker = ({
   label,
   width,
@@ -19,7 +23,7 @@ const CustomTimePicker = ({
   }
 
   const disabledTime = (value) => {
-    return value && value > moment().endOf('day');
+    return value && value > dayjs().endOf('day');
   }
   return (
     <div className={`${label ? styles.wrapper : undefined} u-display-flex u-align-items-center`}>
@@ -28,7 +32,7 @@ const CustomTimePicker = ({
         // disabledTime={TimeRange ? disabledTime : false}
         disabled={disable}
         // format={TimeFormat}
-        value={value ? moment(value, TimeFormat) : null}
+        value={value ? dayjs(value, TimeFormat) : null}
         placeholder={placeholder}
         onChange={onChange}
         size={size}
