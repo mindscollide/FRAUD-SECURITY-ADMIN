@@ -1,0 +1,18 @@
+.AddEdit .MuiButton-text {
+    padding: 3px 55px !important;
+    margin-top: 1px !important;
+}
+
+button.MuiButtonBase-root.MuiButton-root.MuiButton-text.MuiButton-textSizeSmall.MuiButton-sizeSmall {
+    margin-left: 35px;
+}
+
+h3.EditUserTitle {
+    margin-bottom: 25px !important;
+}
+
+@media screen and (max-width: 1150px) {
+    button.MuiButtonBase-root.MuiButton-root.MuiButton-text.MuiButton-textSizeSmall.MuiButton-sizeSmall {
+        margin-left: 60px;
+    }
+}
