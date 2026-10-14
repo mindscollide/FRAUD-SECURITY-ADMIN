@@ -25,6 +25,48 @@ import {
   getAllUserData,
   editUser,
 } from "../../../../store/actions/request-actions";
+
+// single source of truth for dropdown options (name shown <-> id sent to API)
+const USER_ROLES = [
+  { name: "Security Administrator", value: 1 },
+  { name: "System Administrator", value: 2 },
+  { name: "Investigation Officer", value: 3 },
+  { name: "Investigation Manager", value: 4 },
+  { name: "QA Manager", value: 5 },
+  { name: "MIS Manager", value: 6 },
+  { name: "Auditor", value: 7 },
+];
+const USER_STATUSES = [
+  { name: "Enabled", value: 1 },
+  { name: "Disabled", value: 2 },
+  { name: "Locked", value: 3 },
+  { name: "Closed", value: 4 },
+  { name: "Dormant", value: 9 },
+];
+const ROLE_NAMES = USER_ROLES.map((r) => r.name);
+const STATUS_NAMES = USER_STATUSES.map((s) => s.name);
+
+const roleNameById = (id) => {
+  const found = USER_ROLES.find((r) => r.value === id);
+  return found ? found.name : "";
+};
+const statusNameById = (id) => {
+  const found = USER_STATUSES.find((s) => s.value === id);
+  return found ? found.name : "";
+};
+
+// true when a field actually holds a value (treats "", null, undefined,
+// empty arrays and the -99999999999999999999 "empty number" sentinel as empty)
+const hasValue = (v) =>
+  v !== undefined &&
+  v !== null &&
+  v !== "" &&
+  v !== -99999999999999999999 &&
+  !(Array.isArray(v) && v.length === 0);
+
+// show the label only when the field has a value, otherwise "" (placeholder only)
+const lbl = (value, text) => (hasValue(value) ? text : "");
+
 const AddEditUsers = () => {
   const { Title } = Typography;
   const requestReducer = useSelector((state) => state.requestReducer);
@@ -52,30 +94,13 @@ const AddEditUsers = () => {
     SelectRole: 0,
     SelectStaus: 0,
   });
-  // for User Roles
-  const [userRoleValue, setUserRoleValue] = useState([]);
-  const [userRolesName, setUserRolesName] = useState([]);
-  const [userRoles, setUserRoles] = useState([
-    { name: "Security Administrator", value: 1 },
-    { name: "System Administrator", value: 2 },
-    { name: "Investigation Officer", value: 3 },
-    { name: "Investigation Manager", value: 4 },
-    { name: "QA Manager", value: 5 },
-    { name: "MIS Manager", value: 6 },
-  ]);
-  // for already selected value
+  // search dropdown values (selected NAME, "" when nothing selected)
+  const [userRoleValue, setUserRoleValue] = useState("");
+  const [userStatusValue, setUserStatusValue] = useState("");
+  // edit modal dropdown values (selected NAME)
   const [userMRole, setMUserRole] = useState("");
   const [userMStatus, setMUserStatus] = useState("");
-  // for User Status
-  const [userStatusValue, setUserStatusValue] = useState([]);
-  const [userStatusName, setUserStatusName] = useState([]);
-  const [userStatus, setUserStatus] = useState([
-    { name: "Enabled", value: 1 },
-    { name: "Disabled", value: 2 },
-    { name: "Locked", value: 3 },
-    { name: "Closed", value: 4 },
-    { name: "Dormant", value: 9 },
-  ]);
+
   const [searchData, setSearchData] = useState({
     LoginID: "",
     Email: "",
@@ -92,98 +117,47 @@ const AddEditUsers = () => {
     UserRole: 0,
     UserStatus: 0,
   });
-  const fieldsHandler = (e, val) => {
-    let id = e.target.id !== undefined ? e.target.id : null;
-    let name = e.target.name;
-    let value = e.target.value;
-    console.log(val);
-    if (val === "Investigation Manager") {
-      setSearchData({ ...searchData, ["UserRole"]: 4 });
-      setUserRoleValue(val);
-      console.log("data");
-    } else if (val === "Investigation Officer") {
-      setSearchData({ ...searchData, ["UserRole"]: 3 });
-      setUserRoleValue(val);
-    } else if (val === "Auditor") {
-      setSearchData({ ...searchData, ["UserRole"]: 7 });
-      setUserRoleValue(val);
-    } else if (val === "QA Manager") {
-      setSearchData({ ...searchData, ["UserRole"]: 5 });
-      setUserRoleValue(val);
-    } else if (val === "MIS Manager") {
-      setSearchData({ ...searchData, ["UserRole"]: 6 });
-      setUserRoleValue(val);
-    } else if (val === "System Administrator") {
-      setSearchData({ ...searchData, ["UserRole"]: 2 });
-      setUserRoleValue(val);
-    } else if (val === "Security Administrator") {
-      setSearchData({ ...searchData, ["UserRole"]: 1 });
-      setUserRoleValue(val);
-    } else if (val === "Enabled") {
-      setSearchData({ ...searchData, ["UserStatus"]: 1 });
-      setUserStatusValue(val);
-    } else if (val === "Disabled") {
-      setSearchData({ ...searchData, ["UserStatus"]: 2 });
-      setUserStatusValue(val);
-    } else if (val === "Locked") {
-      setSearchData({ ...searchData, ["UserStatus"]: 3 });
-      setUserStatusValue(val);
-    } else if (val === "Closed") {
-      setSearchData({ ...searchData, ["UserStatus"]: 4 });
-      setUserStatusValue(val);
-    } else if (val === "Dormant") {
-      setSearchData({ ...searchData, ["UserStatus"]: 9 });
-      setUserStatusValue(val);
-    } else if (id && id.includes("UserStatus")) {
-      // setSearchData({ ...searchData, ["UserStatus"]: val.title });
-    } else {
-      console.log(value);
-      setSearchData({ ...searchData, [name]: value });
-    }
-    console.log(searchData);
+
+  // text fields (Login ID / First Name / Last Name)
+  const fieldsHandler = (e) => {
+    const name = e.target.name;
+    const value = e.target.value;
+    setSearchData((prev) => ({ ...prev, [name]: value }));
   };
-  // for edit user
-  const editUserDataHnaler = (e, val) => {
-    console.log("editUserDataHnaler", val);
-    if (val === "Investigation Manager") {
-      setForm({ ...form, ["SelectRole"]: 4 });
-      setMUserRole(val);
-    } else if (val === "Investigation Officer") {
-      setForm({ ...form, ["SelectRole"]: 3 });
-      setMUserRole(val);
-    } else if (val === "QA Manager") {
-      setForm({ ...form, ["SelectRole"]: 5 });
-      setMUserRole(val);
-    } else if (val === "MIS Manager") {
-      setForm({ ...form, ["SelectRole"]: 6 });
-      setMUserRole(val);
-    } else if (val === "Auditor") {
-      setForm({ ...form, ["SelectRole"]: 7 });
-      setMUserRole(val);
-    } else if (val === "System Administrator") {
-      setForm({ ...form, ["SelectRole"]: 2 });
-      setMUserRole(val);
-    } else if (val === "Security Administrator") {
-      setForm({ ...form, ["SelectRole"]: 1 });
-      setMUserRole(val);
-    } else if (val === "Enabled") {
-      setForm({ ...form, ["SelectStaus"]: 1 });
-      setMUserStatus(val);
-    } else if (val === "Disabled") {
-      setForm({ ...form, ["SelectStaus"]: 2 });
-      setMUserStatus(val);
-    } else if (val === "Locked") {
-      setForm({ ...form, ["SelectStaus"]: 3 });
-      setMUserStatus(val);
-    } else if (val === "Closed") {
-      setForm({ ...form, ["SelectStaus"]: 4 });
-      setMUserStatus(val);
-    } else if (val === "Dormant") {
-      setForm({ ...form, ["SelectStaus"]: 9 });
-      setMUserStatus(val);
-    } else {
-      console.log("no");
-    }
+
+  // search: Select Role dropdown (also handles the clear "x")
+  const searchRoleHandler = (e, val) => {
+    const role = USER_ROLES.find((r) => r.name === val);
+    setUserRoleValue(role ? role.name : "");
+    setSearchData((prev) => ({ ...prev, UserRole: role ? role.value : 0 }));
+  };
+
+  // search: Select Status dropdown (also handles the clear "x")
+  const searchStatusHandler = (e, val) => {
+    const status = USER_STATUSES.find((s) => s.name === val);
+    setUserStatusValue(status ? status.name : "");
+    setSearchData((prev) => ({
+      ...prev,
+      UserStatus: status ? status.value : 0,
+    }));
+  };
+
+  // edit modal: Select Role dropdown
+  const editRoleHandler = (e, val) => {
+    const role = USER_ROLES.find((r) => r.name === val);
+    // if (role) {
+    setMUserRole(role ? role.name : "");
+    setForm((prev) => ({ ...prev, SelectRole: role ? role.value : 0 }));
+    // }
+  };
+
+  // edit modal: Select Status dropdown
+  const editStatusHandler = (e, val) => {
+    const status = USER_STATUSES.find((s) => s.name === val);
+    // if (status) {
+    setMUserStatus(status ? status.name : "");
+    setForm((prev) => ({ ...prev, SelectStaus: status ? status.value : 0 }));
+    // }
   };
 
   // for search
@@ -200,8 +174,8 @@ const AddEditUsers = () => {
       UserRole: 0,
       UserStatus: 0,
     });
-    setUserRoleValue();
-    setUserStatusValue();
+    setUserRoleValue("");
+    setUserStatusValue("");
     setForm({ LoginID: "", SelectRole: 0, SelectStaus: 0 });
     dispatch(getAllUserData(resetSearchData));
   };
@@ -210,11 +184,9 @@ const AddEditUsers = () => {
     setIsModalVisible2(false);
     setAction({ add: false, edit: false, status: false, update: false });
     setForm({ LoginID: "", SelectRole: 0, SelectStaus: 0 });
-    console.log(form);
   };
   const handleProceed = async () => {
     setIsModalVisible2(false);
-    console.log("editUser", form);
     await dispatch(editUser(form, resetSearchData));
     setForm({ LoginID: "", SelectRole: 0, SelectStaus: 0 });
   };
@@ -244,25 +216,7 @@ const AddEditUsers = () => {
       title: "Role",
       dataIndex: "fK_GSSUserRoleID",
       key: "fK_GSSUserRoleID",
-      render: (text) => (
-        <>
-          {text === 7 ? (
-            <div>Auditor</div>
-          ) : text === 4 ? (
-            <div>Investigation Manager</div>
-          ) : text === 2 ? (
-            <div>System Administrator</div>
-          ) : text === 3 ? (
-            <div>Investigation Officer</div>
-          ) : text === 5 ? (
-            <div>QA Manager</div>
-          ) : text === 6 ? (
-            <div>MIS Manager</div>
-          ) : (
-            <div>Security Administrator</div>
-          )}
-        </>
-      ),
+      render: (text) => <div>{roleNameById(text)}</div>,
       align: "center",
       width: "20%",
     },
@@ -300,9 +254,7 @@ const AddEditUsers = () => {
       ),
     },
   ];
-  // click={handleProceed}
-  // applyClass="btnBorderStyledBeach"
-  // text="Proceed"
+
   const buttonProps = {
     primaryButton: {
       text: "Proceed",
@@ -310,7 +262,6 @@ const AddEditUsers = () => {
       endIcon: "",
       class: "btnBorderStyledBeach",
       size: "",
-      // disable: "",
       click: () => handleProceed(),
     },
     secondaryButton: {
@@ -330,7 +281,7 @@ const AddEditUsers = () => {
       endIcon: "",
       class: "btnBorderStyledBeach",
       size: "",
-      disable: "",
+      disable: userMRole === "" || userMStatus === "" ? true : false,
       click: () => update(),
     },
     secondaryButton: {
@@ -344,38 +295,14 @@ const AddEditUsers = () => {
     },
   };
 
+  // open edit modal with the selected row's current role/status preselected
   const edit = (e, record) => {
-    if (record.fK_GSSUserRoleID === 2) {
-      setMUserRole("System Administrator");
-    } else if (record.fK_GSSUserRoleID === 3) {
-      setMUserRole("Investigation Officer");
-    } else if (record.fK_GSSUserRoleID === 4) {
-      setMUserRole("Investigation Manager");
-    } else if (record.fK_GSSUserRoleID === 5) {
-      setMUserRole("QA Manager");
-    } else if (record.fK_GSSUserRoleID === 6) {
-      setMUserRole("MIS Manager");
-    } else if (record.fK_GSSUserRoleID === 7) {
-      setMUserRole("Auditor");
-    } else {
-      setMUserRole("Security Administrator");
-    }
-    if (record.fK_GSSUserStatusID === 1) {
-      setMUserStatus("Enabled");
-    } else if (record.fK_GSSUserStatusID === 2) {
-      setMUserStatus("Disabled");
-    } else if (record.fK_GSSUserStatusID === 3) {
-      setMUserStatus("Locked");
-    } else if (record.fK_GSSUserStatusID === 9) {
-      setMUserStatus("Dormant");
-    } else {
-      setMUserStatus("Closed");
-    }
+    setMUserRole(roleNameById(record.fK_GSSUserRoleID));
+    setMUserStatus(statusNameById(record.fK_GSSUserStatusID));
     setForm({
-      ...form,
-      ["LoginID"]: record.userID,
-      ["SelectRole"]: record.fK_GSSUserRoleID,
-      ["SelectStaus"]: record.fK_GSSUserStatusID,
+      LoginID: record.userID,
+      SelectRole: record.fK_GSSUserRoleID,
+      SelectStaus: record.fK_GSSUserStatusID,
     });
     setclassificationofAdvance({
       ...classificationofAdvance,
@@ -386,348 +313,30 @@ const AddEditUsers = () => {
     });
     setIsModalVisible(true);
   };
-  const forstatudId = () => {
-    if (form.SelectStaus === 0) {
-      console.log(userMStatus);
-      if (userMStatus === "Enabled") {
-        if (form.SelectRole === 0) {
-          console.log(userMRole);
-          if (userMRole === "Investigation Manager") {
-            setForm({ ...form, ["SelectRole"]: 4, ["SelectStaus"]: 1 });
-            console.log(userMRole);
-          } else if (userMRole === "Investigation Officer") {
-            setForm({ ...form, ["SelectRole"]: 3, ["SelectStaus"]: 1 });
-            console.log(userMRole);
-          } else if (userMRole === "QA Manager") {
-            setForm({ ...form, ["SelectRole"]: 5, ["SelectStaus"]: 1 });
-            console.log(userMRole);
-          } else if (userMRole === "System Administrator") {
-            setForm({ ...form, ["SelectRole"]: 2, ["SelectStaus"]: 1 });
-            console.log(userMRole);
-          } else if (userMRole === "Security Administrator") {
-            setForm({ ...form, ["SelectRole"]: 1, ["SelectStaus"]: 1 });
-            console.log(userMRole);
-          } else if (userMRole === "MIS Manager") {
-            setForm({ ...form, ["SelectRole"]: 6, ["SelectStaus"]: 1 });
-            console.log(userMRole);
-          } else {
-            console.log("no");
-          }
-        } else {
-          setForm({ ...form, ["SelectStaus"]: 1 });
-        }
-      } else if (userMStatus === "Disabled") {
-        if (form.SelectRole === 0) {
-          console.log(userMRole);
-          if (userMRole === "Investigation Manager") {
-            setForm({ ...form, ["SelectRole"]: 4, ["SelectStaus"]: 2 });
-            console.log(userMRole);
-          } else if (userMRole === "Investigation Officer") {
-            setForm({ ...form, ["SelectRole"]: 3, ["SelectStaus"]: 2 });
-            console.log(userMRole);
-          } else if (userMRole === "QA Manager") {
-            setForm({ ...form, ["SelectRole"]: 5, ["SelectStaus"]: 2 });
-            console.log(userMRole);
-          } else if (userMRole === "System Administrator") {
-            setForm({ ...form, ["SelectRole"]: 2, ["SelectStaus"]: 2 });
-            console.log(userMRole);
-          } else if (userMRole === "Security Administrator") {
-            setForm({ ...form, ["SelectRole"]: 1, ["SelectStaus"]: 2 });
-            console.log(userMRole);
-          } else if (userMRole === "MIS Manager") {
-            setForm({ ...form, ["SelectRole"]: 6, ["SelectStaus"]: 2 });
-            console.log(userMRole);
-          } else {
-            console.log("no");
-          }
-        } else {
-          setForm({ ...form, ["SelectStaus"]: 2 });
-        }
-      } else if (userMStatus === "Locked") {
-        if (form.SelectRole === 0) {
-          console.log(userMRole);
-          if (userMRole === "Investigation Manager") {
-            setForm({ ...form, ["SelectRole"]: 4, ["SelectStaus"]: 3 });
-            console.log(userMRole);
-          } else if (userMRole === "Investigation Officer") {
-            setForm({ ...form, ["SelectRole"]: 3, ["SelectStaus"]: 3 });
-            console.log(userMRole);
-          } else if (userMRole === "QA Manager") {
-            setForm({ ...form, ["SelectRole"]: 5, ["SelectStaus"]: 3 });
-            console.log(userMRole);
-          } else if (userMRole === "System Administrator") {
-            setForm({ ...form, ["SelectRole"]: 2, ["SelectStaus"]: 3 });
-            console.log(userMRole);
-          } else if (userMRole === "Security Administrator") {
-            setForm({ ...form, ["SelectRole"]: 1, ["SelectStaus"]: 3 });
-            console.log(userMRole);
-          } else if (userMRole === "MIS Manager") {
-            setForm({ ...form, ["SelectRole"]: 6, ["SelectStaus"]: 3 });
-            console.log(userMRole);
-          } else {
-            console.log("no");
-          }
-        } else {
-          setForm({ ...form, ["SelectStaus"]: 3 });
-        }
-      } else if (userMStatus === "Closed") {
-        if (form.SelectRole === 0) {
-          console.log(userMRole);
-          if (userMRole === "Investigation Manager") {
-            setForm({ ...form, ["SelectRole"]: 4, ["SelectStaus"]: 4 });
-            console.log(userMRole);
-          } else if (userMRole === "Investigation Officer") {
-            setForm({ ...form, ["SelectRole"]: 3, ["SelectStaus"]: 4 });
-            console.log(userMRole);
-          } else if (userMRole === "QA Manager") {
-            setForm({ ...form, ["SelectRole"]: 5, ["SelectStaus"]: 4 });
-            console.log(userMRole);
-          } else if (userMRole === "System Administrator") {
-            setForm({ ...form, ["SelectRole"]: 2, ["SelectStaus"]: 4 });
-            console.log(userMRole);
-          } else if (userMRole === "Security Administrator") {
-            setForm({ ...form, ["SelectRole"]: 1, ["SelectStaus"]: 4 });
-            console.log(userMRole);
-          } else if (userMRole === "MIS Manager") {
-            setForm({ ...form, ["SelectRole"]: 6, ["SelectStaus"]: 4 });
-            console.log(userMRole);
-          } else {
-            console.log("no");
-          }
-        } else {
-          setForm({ ...form, ["SelectStaus"]: 4 });
-        }
-      } else if (userMStatus === "Dormant") {
-        if (form.SelectRole === 0) {
-          console.log(userMRole);
-          if (userMRole === "Investigation Manager") {
-            setForm({ ...form, ["SelectRole"]: 4, ["SelectStaus"]: 9 });
-            console.log(userMRole);
-          } else if (userMRole === "Investigation Officer") {
-            setForm({ ...form, ["SelectRole"]: 3, ["SelectStaus"]: 9 });
-            console.log(userMRole);
-          } else if (userMRole === "QA Manager") {
-            setForm({ ...form, ["SelectRole"]: 5, ["SelectStaus"]: 9 });
-            console.log(userMRole);
-          } else if (userMRole === "System Administrator") {
-            setForm({ ...form, ["SelectRole"]: 2, ["SelectStaus"]: 9 });
-            console.log(userMRole);
-          } else if (userMRole === "Security Administrator") {
-            setForm({ ...form, ["SelectRole"]: 1, ["SelectStaus"]: 9 });
-            console.log(userMRole);
-          } else if (userMRole === "MIS Manager") {
-            setForm({ ...form, ["SelectRole"]: 6, ["SelectStaus"]: 9 });
-            console.log(userMRole);
-          } else {
-            console.log("no");
-          }
-        } else {
-          setForm({ ...form, ["SelectStaus"]: 4 });
-        }
-      } else {
-        console.log("no");
-      }
-    }
-  };
-  const forRollId = () => {
-    if (form.SelectRole === 0) {
-      console.log(userMRole);
-      if (userMRole === "Investigation Manager") {
-        // setForm({ ...form, ["SelectRole"]: 4 })
-        if (form.SelectStaus === 0) {
-          console.log(userMStatus);
-          if (userMStatus === "Enabled") {
-            setForm({ ...form, ["SelectRole"]: 4, ["SelectStaus"]: 1 });
-            console.log(userMStatus);
-          } else if (userMStatus === "Disabled") {
-            setForm({ ...form, ["SelectRole"]: 4, ["SelectStaus"]: 2 });
-            console.log(userMStatus);
-          } else if (userMStatus === "Locked") {
-            setForm({ ...form, ["SelectRole"]: 4, ["SelectStaus"]: 3 });
-            console.log(userMStatus);
-          } else if (userMStatus === "Closed") {
-            setForm({ ...form, ["SelectRole"]: 4, ["SelectStaus"]: 4 });
-            console.log(userMStatus);
-          } else if (userMStatus === "Dormant ") {
-            setForm({ ...form, ["SelectRole"]: 4, ["SelectStaus"]: 9 });
-            console.log(userMStatus);
-          } else {
-            console.log("no");
-          }
-        } else {
-          setForm({ ...form, ["SelectRole"]: 4 });
-        }
-        console.log(userMRole);
-      } else if (userMRole === "Investigation Officer") {
-        // setForm({ ...form, ["SelectRole"]: 3 })
-        if (form.SelectStaus === 0) {
-          console.log(userMStatus);
-          if (userMStatus === "Enabled") {
-            setForm({ ...form, ["SelectRole"]: 3, ["SelectStaus"]: 1 });
-            console.log(userMStatus);
-          } else if (userMStatus === "Disabled") {
-            setForm({ ...form, ["SelectRole"]: 3, ["SelectStaus"]: 2 });
-            console.log(userMStatus);
-          } else if (userMStatus === "Locked") {
-            setForm({ ...form, ["SelectRole"]: 3, ["SelectStaus"]: 3 });
-            console.log(userMStatus);
-          } else if (userMStatus === "Closed") {
-            setForm({ ...form, ["SelectRole"]: 3, ["SelectStaus"]: 4 });
-            console.log(userMStatus);
-          } else if (userMStatus === "Dormant ") {
-            setForm({ ...form, ["SelectRole"]: 3, ["SelectStaus"]: 9 });
-            console.log(userMStatus);
-          } else {
-            console.log("no");
-          }
-        } else {
-          setForm({ ...form, ["SelectRole"]: 3 });
-        }
-        console.log(userMRole);
-      } else if (userMRole === "QA Manager") {
-        // setForm({ ...form, ["SelectRole"]: 5 })
-        if (form.SelectStaus === 0) {
-          console.log(userMStatus);
-          if (userMStatus === "Enabled") {
-            setForm({ ...form, ["SelectRole"]: 5, ["SelectStaus"]: 1 });
-            console.log(userMStatus);
-          } else if (userMStatus === "Disabled") {
-            setForm({ ...form, ["SelectRole"]: 5, ["SelectStaus"]: 2 });
-            console.log(userMStatus);
-          } else if (userMStatus === "Locked") {
-            setForm({ ...form, ["SelectRole"]: 5, ["SelectStaus"]: 3 });
-            console.log(userMStatus);
-          } else if (userMStatus === "Closed") {
-            setForm({ ...form, ["SelectRole"]: 5, ["SelectStaus"]: 4 });
-            console.log(userMStatus);
-          } else if (userMStatus === "Dormant ") {
-            setForm({ ...form, ["SelectRole"]: 5, ["SelectStaus"]: 9 });
-            console.log(userMStatus);
-          } else {
-            console.log("no");
-          }
-        } else {
-          setForm({ ...form, ["SelectRole"]: 5 });
-        }
-        console.log(userMRole);
-      } else if (userMRole === "System Administrator") {
-        // setForm({ ...form, ["SelectRole"]: 2 })
-        if (form.SelectStaus === 0) {
-          console.log(userMStatus);
-          if (userMStatus === "Enabled") {
-            setForm({ ...form, ["SelectRole"]: 2, ["SelectStaus"]: 1 });
-            console.log(userMStatus);
-          } else if (userMStatus === "Disabled") {
-            setForm({ ...form, ["SelectRole"]: 2, ["SelectStaus"]: 2 });
-            console.log(userMStatus);
-          } else if (userMStatus === "Locked") {
-            setForm({ ...form, ["SelectRole"]: 2, ["SelectStaus"]: 3 });
-            console.log(userMStatus);
-          } else if (userMStatus === "Closed") {
-            setForm({ ...form, ["SelectRole"]: 2, ["SelectStaus"]: 4 });
-            console.log(userMStatus);
-          } else if (userMStatus === "Dormant ") {
-            setForm({ ...form, ["SelectRole"]: 2, ["SelectStaus"]: 9 });
-            console.log(userMStatus);
-          } else {
-            console.log("no");
-          }
-        } else {
-          setForm({ ...form, ["SelectRole"]: 2 });
-        }
-      } else if (userMRole === "Security Administrator") {
-        // setForm({ ...form, ["SelectRole"]: 3 })
-        if (form.SelectStaus === 0) {
-          console.log(userMStatus);
-          if (userMStatus === "Enabled") {
-            setForm({ ...form, ["SelectRole"]: 1, ["SelectStaus"]: 1 });
-            console.log(userMStatus);
-          } else if (userMStatus === "Disabled") {
-            setForm({ ...form, ["SelectRole"]: 1, ["SelectStaus"]: 2 });
-            console.log(userMStatus);
-          } else if (userMStatus === "Locked") {
-            setForm({ ...form, ["SelectRole"]: 1, ["SelectStaus"]: 3 });
-            console.log(userMStatus);
-          } else if (userMStatus === "Closed") {
-            setForm({ ...form, ["SelectRole"]: 1, ["SelectStaus"]: 4 });
-            console.log(userMStatus);
-          } else if (userMStatus === "Dormant ") {
-            setForm({ ...form, ["SelectRole"]: 1, ["SelectStaus"]: 9 });
-            console.log(userMStatus);
-          } else {
-            console.log("no");
-          }
-        } else {
-          setForm({ ...form, ["SelectRole"]: 1 });
-        }
-        console.log(userMRole);
-      } else if (userMRole === "MIS Manager") {
-        // setForm({ ...form, ["SelectRole"]: 3 })
-        if (form.SelectStaus === 0) {
-          console.log(userMStatus);
-          if (userMStatus === "Enabled") {
-            setForm({ ...form, ["SelectRole"]: 6, ["SelectStaus"]: 1 });
-            console.log(userMStatus);
-          } else if (userMStatus === "Disabled") {
-            setForm({ ...form, ["SelectRole"]: 6, ["SelectStaus"]: 2 });
-            console.log(userMStatus);
-          } else if (userMStatus === "Locked") {
-            setForm({ ...form, ["SelectRole"]: 6, ["SelectStaus"]: 3 });
-            console.log(userMStatus);
-          } else if (userMStatus === "Closed") {
-            setForm({ ...form, ["SelectRole"]: 6, ["SelectStaus"]: 4 });
-            console.log(userMStatus);
-          } else if (userMStatus === "Dormant ") {
-            setForm({ ...form, ["SelectRole"]: 6, ["SelectStaus"]: 9 });
-            console.log(userMStatus);
-          } else {
-            console.log("no");
-          }
-        } else {
-          setForm({ ...form, ["SelectRole"]: 1 });
-        }
-        console.log(userMRole);
-      } else {
-        console.log("no");
-      }
-    }
-  };
-  const update = async () => {
-    await forRollId();
-    await forstatudId();
-    await setIsModalVisible(false);
+
+  // `form` already holds the role/status ids (set on edit() and by the edit
+  // dropdown handlers), so just move on to the confirmation modal
+  const update = () => {
+    setIsModalVisible(false);
     setIsModalVisible2(true);
+    console.log(userMRole, userMStatus, "Cehckstatusandroel");
   };
+
   // Api call for user data
   useEffect(() => {
     dispatch(getAllUserData(searchData));
-    if (userRoles) {
-      setUserRolesName(
-        userRoles.map((role, i) => {
-          return role.name;
-        })
-      );
-    }
-    if (userStatus) {
-      setUserStatusName(
-        userStatus.map((status, i) => {
-          return status.name;
-        })
-      );
-    }
-    console.log(userStatusName);
   }, []);
+
   // User data Responce
   useEffect(() => {
-    console.log(requestReducer);
     if (requestReducer.ResponseMessage == "Record Found") {
       var addKey = requestReducer.UserDetails.map((item, index) => {
         return { ...item, key: index };
       });
       setRows(addKey);
-      console.log("No record found", requestReducer.UserDetails);
     }
   }, [requestReducer.UserDetails]);
+
   return (
     <>
       <Title className="EditUserTitle" level={3}>
@@ -737,7 +346,8 @@ const AddEditUsers = () => {
         <Col lg={6} md={6} sm={24}>
           <TextField
             fullWidth
-            label="Login ID"
+            label={lbl(searchData.LoginID, "Login ID")}
+            placeholder={"Login ID"}
             size="small"
             name="LoginID"
             value={searchData.LoginID}
@@ -747,7 +357,8 @@ const AddEditUsers = () => {
         <Col lg={6} md={6} sm={24}>
           <TextField
             fullWidth
-            label="First Name"
+            label={lbl(searchData.FirstName, "First Name")}
+            placeholder={"First Name"}
             size="small"
             name="FirstName"
             value={searchData.FirstName}
@@ -757,7 +368,8 @@ const AddEditUsers = () => {
         <Col lg={6} md={6} sm={24}>
           <TextField
             fullWidth
-            label="Last Name"
+            label={lbl(searchData.LastName, "Last Name")}
+            placeholder={"Last Name"}
             size="small"
             name="LastName"
             value={searchData.LastName}
@@ -766,49 +378,49 @@ const AddEditUsers = () => {
         </Col>
         <Col lg={6} md={6} sm={24}>
           <SelectBox
-            label="Select Role"
+            label={lbl(userRoleValue, "Select Role")}
+            placeholder={"Select Role"}
             size="small"
             height="10px!important"
-            option={userRolesName}
+            option={ROLE_NAMES}
             name="UserRole"
             value={userRoleValue}
-            change={fieldsHandler}
+            change={searchRoleHandler}
           />
         </Col>
+      </Row>
+      <Row gutter={8} className="u-margin-top-22px">
         <Col lg={6} md={6} sm={24}>
           <SelectBox
-            label="Select Status"
+            label={lbl(userStatusValue, "Select Status")}
+            placeholder={"Select Status"}
             size="small"
             height="10px!important"
-            option={userStatusName}
-            name="UserStaus"
+            option={STATUS_NAMES}
+            name="UserStatus"
             value={userStatusValue}
-            change={fieldsHandler}
+            change={searchStatusHandler}
           />
         </Col>
-        <Col md={12} lg={12} sm={24} className="AddEdit u-text-align-right">
-          <div className="u-display-flex">
-            <div style={{ width: "18.75%" }}>
-              <Button
-                applyClass="btnDarkSolid"
-                text="Search"
-                icon={<i className="icon-search icon-size-one"></i>}
-                click={searchHandler}
-              />
-            </div>
-            <div className="u-margin-left-10px" style={{ width: "18.75%" }}>
-              <Button
-                text="Reset"
-                icon={<Restore />}
-                applyClass="btnDarkSolid"
-                size="small"
-                click={resetData}
-              />
-            </div>
-          </div>
+        <Col md={4} lg={4} sm={24}>
+          <Button
+            applyClass="btnDarkSolid"
+            text="Search"
+            icon={<i className="icon-search icon-size-one"></i>}
+            click={searchHandler}
+          />
         </Col>
-
-        <div className="u-margin-top-10pct" />
+        <Col md={4} lg={4} sm={24}>
+          <Button
+            text="Reset"
+            icon={<i className="icon-reset icon-size-one"></i>}
+            applyClass="btnSecondarySolidReset"
+            size="small"
+            click={resetData}
+          />
+        </Col>
+      </Row>
+      <Row className="u-margin-top-10px">
         <Col md={24} lg={24} sm={24}>
           <Table
             rows={row}
@@ -847,20 +459,22 @@ const AddEditUsers = () => {
           <Row gutter={16}>
             <Col md={12} lg={12} sm={12}>
               <SelectBox
-                label="Select Role"
+                label={lbl(userMRole, "Select Role")}
+                placeholder={"Select Role"}
                 name="SelectRole"
-                option={userRolesName}
+                option={ROLE_NAMES}
                 value={userMRole}
-                change={editUserDataHnaler}
+                change={editRoleHandler}
               />
             </Col>
             <Col md={12} lg={12} sm={12}>
               <SelectBox
-                label="Select Status"
+                label={lbl(userMStatus, "Select Status")}
+                placeholder={"Select Status"}
                 name="SelectStaus"
-                option={userStatusName}
+                option={STATUS_NAMES}
                 value={userMStatus}
-                change={editUserDataHnaler}
+                change={editStatusHandler}
               />
             </Col>
           </Row>
@@ -875,9 +489,9 @@ const AddEditUsers = () => {
           modalState={isModalVisible2}
           width={700}
         >
-          <div className="u-padding-40px u-display-flex u-justify-content-center">
-            <div className="icon-update-user icon-size-two"></div>
-            <Title level={3} align="center">
+          <div className="u-padding-40px u-display-flex u-align-items-center u-justify-content-center ">
+            <div className="icon-update-user icon-size-two" />
+            <Title level={3} style={{ margin: 0, textAlign: "center" }}>
               Are you sure you want to update this user?
             </Title>
           </div>
@@ -885,7 +499,6 @@ const AddEditUsers = () => {
           <GroupedButtons data={buttonProps} />
         </Modal>
       </>
-      {/* )} */}
       {requestReducer.Loading ? (
         <Loader loaderstyle="authenticationLoaderStyle" />
       ) : null}
