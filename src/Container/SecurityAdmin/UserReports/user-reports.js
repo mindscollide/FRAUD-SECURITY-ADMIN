@@ -90,6 +90,7 @@ const UserReports = () => {
     });
   };
   const handleForStatus = (e, value) => {
+    setStatusValue(e);
     if (value === "Enabled") {
       setState({
         ...State,
@@ -140,6 +141,10 @@ const UserReports = () => {
     }
   };
   console.log("reports.isLoading ", reports);
+  const hasDateValue =
+    (State.DateFrom !== null && State.DateFrom !== "") ||
+    (State.DateTo !== null && State.DateTo == "");
+
   return (
     <>
       <Title level={3}>User Reports</Title>
@@ -148,7 +153,8 @@ const UserReports = () => {
           <TextField
             name="LDAPAccount"
             fullWidth
-            label="Login ID"
+            label={State.LDAPAccount !== "" ? "Login ID" : ""}
+            placeholder={"Login ID"}
             size="small"
             change={handleChange}
             value={State.LDAPAccount}
@@ -156,7 +162,8 @@ const UserReports = () => {
         </Col>
         <Col lg={4} md={4} sm={24}>
           <SelectBox
-            label="StatusID"
+            label={StatusValue && "Select Status"}
+            placeholder={"Select Status"}
             change={handleForStatus}
             option={status}
             value={StatusValue}
@@ -167,7 +174,8 @@ const UserReports = () => {
           <TextField
             fullWidth
             name="FirstName"
-            label="First Name"
+            label={State.FirstName !== "" ? "First Name" : ""}
+            placeholder={"First Name"}
             size="small"
             change={handleChange}
             value={State.FirstName}
@@ -177,7 +185,8 @@ const UserReports = () => {
           <TextField
             fullWidth
             name="LastName"
-            label="Last Name"
+            label={State.LastName !== "" ? "Last Name" : ""}
+            placeholder={"Last Name"}
             size="small"
             change={handleChange}
             value={State.LastName}
@@ -187,7 +196,8 @@ const UserReports = () => {
         <Col lg={8} md={8} sm={24}>
           <StartToEndDate
             // change={datehandler}
-            label={"Date Range"}
+            label={hasDateValue ? "Date Range" : ""}
+            // label={"Date Range"}
             width="100%!important"
             size="large"
             change={setDate}
@@ -205,31 +215,32 @@ const UserReports = () => {
             DateRange={true}
           />
         </Col>
+      </Row>
+      <Row gutter={8} className="u-margin-top-22px">
         <Col md={24} lg={24} sm={24} className="u-text-align-center">
           <Space>
-            {/* <Button
-              text="Search"
-              icon={<Search />}
-              applyClass="btnDarkSolid"
-              size="small"
-              // click={()=>dispatch(SearchApprovalFlow(State.ApprovalFlowName,State.ApprovalFlowDescription))}
-            /> */}
             <Button
               text="Reset"
-              icon={<Restore />}
+              icon={<i className="icon-reset icon-size-zero"></i>}
               applyClass="btnSecondarySolid"
               size="small"
               click={resetData}
             />
           </Space>
         </Col>
+      </Row>
+      <Row gutter={8}>
         <Col lg={24} md={22} sm={24} className="u-margin-top-1pct">
           <Title level={3}>User Status</Title>
         </Col>
         <Col lg={6} md={6} sm={24}>
           <Button
             text="Access Details"
-            icon={<DownloadOutlined />}
+            icon={
+              <i className="icon-size-zero">
+                <DownloadOutlined />
+              </i>
+            }
             applyClass="btnDarkSolid"
             size="small"
             click={() => dispatch(downloadAccessDetailReport(State))}
@@ -239,7 +250,11 @@ const UserReports = () => {
         <Col lg={6} md={6} sm={24}>
           <Button
             text="Login History"
-            icon={<DownloadOutlined />}
+            icon={
+              <i className="icon-size-zero">
+                <DownloadOutlined />
+              </i>
+            }
             applyClass="btnDarkSolid"
             size="small"
             click={() => dispatch(downloadLoginHistoryReport(State))}
@@ -249,7 +264,11 @@ const UserReports = () => {
         <Col lg={6} md={6} sm={24}>
           <Button
             text="Status Wise"
-            icon={<DownloadOutlined />}
+            icon={
+              <i className="icon-size-zero">
+                <DownloadOutlined />
+              </i>
+            }
             applyClass="btnDarkSolid"
             size="small"
             click={() => dispatch(downloadStatusWiseReport(State))}
@@ -259,7 +278,11 @@ const UserReports = () => {
         <Col lg={6} md={6} sm={24}>
           <Button
             text="Last Login"
-            icon={<DownloadOutlined />}
+            icon={
+              <i className="icon-size-zero">
+                <DownloadOutlined />
+              </i>
+            }
             applyClass="btnDarkSolid"
             size="small"
             click={() => dispatch(lastLoginReport(State))}
