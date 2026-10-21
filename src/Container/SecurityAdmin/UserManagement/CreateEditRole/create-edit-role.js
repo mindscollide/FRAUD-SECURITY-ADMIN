@@ -266,7 +266,9 @@ const CreateEditRoles = () => {
         {" "}
         {actions.add && (
           <>
-            <Title level={3} align="center">Are you sure you want to create a new user?</Title>
+            <Title level={3} align="center">
+              Are you sure you want to create a new user?
+            </Title>
             <div className="u-padding-15px" />
             <Row gutter={8}>
               <Col md={6} lg={6} sm={24}></Col>
@@ -284,7 +286,7 @@ const CreateEditRoles = () => {
                   <div className="u-width-33_333pct">
                     <Button
                       applyClass="btnBorderStyledRed"
-                      text="discard"
+                      text="Discard"
                       icon={<i className="icon-close icon-size-one"></i>}
                       click={handleCancel}
                     />
@@ -296,45 +298,53 @@ const CreateEditRoles = () => {
         )}
         {actions.edit && (
           <>
-            <div className="u-display-flex u-justify-content-center u-padding-40px">
-              <p className="m-0 u-color-b27706">
-                Type your Comments<span className="u-color-ce0000">*</span>
-              </p>
+            <div className=" u-padding-40px">
+              {/* <p className="m-0 u-color-b27706">
+                Type your Comments<span className="u-color-ce0000"> *</span>
+              </p> */}
               <TextField
+                label={rejectionComment !== "" ? "Type Your Comments" : ""}
+                required
                 multiline
                 rows={4}
-                placeholder="Comments"
+                placeholder="Type Your Comments *"
                 change={Comments}
                 value={rejectionComment}
                 fullWidth
                 name="Comments"
               />
             </div>
-            <Row gutter={8}>
-              <Col md={8} lg={8} sm={24}></Col>
-              <Col md={16} lg={16} sm={24}>
-                <div className="u-display-flex">
-                  <div className="u-width-33_333pct">
-                    <Button
-                      applyClass="buttonPrimary3"
-                      text="Proceed "
-                      icon={<i className="icon-check icon-size-one "></i>}
-                      click={rejectUser}
-                      disableBtn={btnDisabled}
-                    />
-                  </div>
+            <Row
+              gutter={16}
+              className="u-display-flex u-justify-content-center"
+            >
+              {/* <Col md={8} lg={8} sm={24}></Col> */}
+              <Col md={6} lg={6} sm={24}>
+                {/* <div className="u-display-flex">
+                  <div className="u-width-33_333pct"> */}
+                <Button
+                  applyClass="buttonPrimary3"
+                  text="Proceed "
+                  icon={<i className="icon-check icon-size-one "></i>}
+                  click={rejectUser}
+                  // disableBtn={btnDisabled}
+                  disableBtn={rejectionComment === ""}
+                />
+                {/* </div>
                   <div className="u-margin-0-5px-0-5px" />
-                  <div className="u-width-33_333pct">
-                    <Button
-                      applyClass="btnBorderStyledRed"
-                      text="discard "
-                      icon={<i className="icon-close icon-size-one"></i>}
-                      // click={() => goToSaveHandler(item, Rejected)}
-                      click={handleCancel}
-                      // disableBtn={btnDisabled}
-                    />
-                  </div>
-                </div>
+                  <div className="u-width-33_333pct"> */}
+              </Col>
+              <Col md={6} lg={6} sm={24}>
+                <Button
+                  applyClass="btnBorderStyledRed"
+                  text="Discard "
+                  icon={<i className="icon-close icon-size-one"></i>}
+                  // click={() => goToSaveHandler(item, Rejected)}
+                  click={handleCancel}
+                  // disableBtn={btnDisabled}
+                />
+                {/* </div>
+                </div> */}
               </Col>
             </Row>
           </>
