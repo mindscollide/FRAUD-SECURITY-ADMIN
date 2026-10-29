@@ -1,38 +1,45 @@
-// antd v5 theme. Replaces the v4 Less `modifyVars` that used to live in
-// vite.config.js (v5 is CSS-in-JS and no longer reads Less variables).
-// Each token below maps 1:1 to the old Less variable noted beside it.
+// antd theme (antd 6 is CSS-in-JS and reads no Less variables). Mirrors FRMU
+// main's orange/peach design ("Minds Collide New Screens"); the comment beside
+// each token names the Less variable FRMU main sets in vite.config.js.
+//
+// Palette: primary orange #EC8D57 · peach #F0BA94 · light peach #FFF5EE ·
+// hover peach #FCE3D2 · row stripes #FFF8F3 / #FDEEE5 · text #2F2F2F.
 const theme = {
   token: {
-    colorPrimary: "#04908b", // @primary-color
-    colorBgLayout: "#f6f6f6", // @body-background
+    colorPrimary: "#EC8D57", // @primary-color
+    colorBgLayout: "#FFF5EE", // @body-background
     fontFamily: "'Open Sans', sans-serif", // @font-family
-    // v5 defaults to 6px rounded corners; v4 used 2px. Kept at 2px so
-    // buttons/inputs/selects look the same as before the upgrade.
-    borderRadius: 2,
+    fontFamilyCode: "'Open Sans', sans-serif", // @code-family
+    // inputs, selects, pickers and buttons are rounded to 8px
+    borderRadius: 8,
   },
   components: {
-    // Sidebar menu: keep the v4 look (white items on the dark teal sider,
-    // green selected row, full-width square rows). v5 otherwise colours
-    // items with colorPrimary/dark text and insets them with rounded corners.
+    // Sidebar: each parent menu is a rounded card styled in
+    // Layout/Sidebar/sidebar.module.css; these tokens keep antd's own
+    // defaults in line with it (no inset items, no active bar).
     Menu: {
-      itemBg: "#025f5c",
-      subMenuItemBg: "#025f5c",
-      itemColor: "#ffffff",
-      itemHoverColor: "#ffffff",
-      itemSelectedColor: "#ffffff",
-      itemSelectedBg: "#43b78f",
-      itemHoverBg: "transparent",
+      itemBg: "#FFFFFF",
+      subMenuItemBg: "#FFFFFF",
+      itemColor: "#2F2F2F",
+      itemHoverColor: "#EC8D57",
+      itemHoverBg: "#FFF5EE",
+      itemSelectedColor: "#2F2F2F",
+      itemSelectedBg: "#F0BA94",
       itemActiveBg: "transparent",
       itemMarginInline: 0,
-      itemBorderRadius: 0,
-      subMenuItemBorderRadius: 0,
+      itemBorderRadius: 6,
+      subMenuItemBorderRadius: 6,
       activeBarBorderWidth: 0,
     },
     Table: {
-      rowHoverBg: "#eaf4f4", // @table-row-hover-bg
-      cellPaddingBlock: 5, // @table-padding-vertical
+      headerBg: "#F0BA94",
+      headerColor: "#2F2F2F",
+      headerSplitColor: "transparent", // no column separators in the header
+      headerBorderRadius: 10,
+      rowHoverBg: "#FCE3D2", // @table-row-hover-bg
+      borderColor: "transparent", // no grid lines
+      cellPaddingBlock: 10, // @table-padding-vertical
       cellPaddingInline: 5, // @table-padding-horizontal
-      borderColor: "#dee6e6", // @table-border-color
     },
   },
 };

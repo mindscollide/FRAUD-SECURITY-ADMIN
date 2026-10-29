@@ -1,5 +1,6 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { notification } from "antd";
+import { BellFilled, CloseOutlined } from "@ant-design/icons";
 
 const Message = {
   success: "success",
@@ -26,22 +27,23 @@ const Notification = ({ setOpen, open, message }) => {
 
   useEffect(() => {
     if (open && message !== "") {
+      // longer messages stay up longer so the whole text can be read
+      const text = typeof message === "string" ? message : "";
+      const duration = Math.min(8, Math.max(3.5, text.length / 14));
       notification.open({
-        // antd v6 renamed the notice's `message` field to `title`
+        // antd 6 renamed the notice's `message` field to `title`
         title: message,
         placement: "topRight",
-        duration: 2,
-        // The original MUI Alert always rendered with a hardcoded teal
-        // "success" background regardless of its severity="error" prop
-        // (a pre-existing bug — the classes.BackGroundSucces override always
-        // won) — preserved exactly rather than "corrected" to show red.
-        // className (not just style) is needed because antd's own
-        // .ant-notification-notice-title rule sets an explicit text color
-        // that would otherwise win over an inherited one from style={}.
+        duration,
+        icon: (
+          <span className="app-notification-icon">
+            <BellFilled />
+          </span>
+        ),
+        closeIcon: <CloseOutlined />,
         className: "app-teal-notification",
-        style: {
-          backgroundColor: "#078480",
-        },
+        // drives the time-left bar along the bottom (see App.less)
+        style: { "--notification-duration": `${duration}s` },
         onClose: handleClose,
       });
     }

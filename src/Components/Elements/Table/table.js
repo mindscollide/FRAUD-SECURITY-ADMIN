@@ -10,14 +10,17 @@ const CustomTable = ({
   scroll,
   rowSelection,
   id,
+  className,
 }) => {
   return (
     <Table
-      rowClassName="rowColor"
+      className={className}
+      rowClassName={(record, index) =>
+        index % 2 === 0 ? "rowColor" : "rowColor rowColorAlt"
+      }
       rowSelection={rowSelection}
       columns={columns}
       dataSource={rows}
-      bordered
       pagination={pagination}
       scroll={scroll}
     />
