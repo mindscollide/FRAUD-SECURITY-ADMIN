@@ -1,0 +1,207 @@
+/* Login split screen: form left, orange panel right (from FRMU main's
+   AuthLayout, login mode only; no Sign Up switch or curtain animation). */
+.shell {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  flex-direction: row;
+  background: #FFFFFF;
+  overflow: hidden;
+}
+
+/* ---------- form side ---------- */
+.formSide {
+  position: relative;
+  flex: 1 1 60%;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  background: #FFFFFF;
+  /* still scrolls on short screens but never shows a scrollbar */
+  scrollbar-width: none;
+}
+
+.formSide::-webkit-scrollbar {
+  display: none;
+}
+
+.brand {
+  padding: 22px 32px 0;
+  font-size: 14px;
+  font-weight: 700;
+  color: #2F2F2F;
+  letter-spacing: 0.3px;
+}
+
+.formInner {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 100%;
+  max-width: 440px;
+  margin: 0 auto;
+  padding: 24px 24px 40px;
+}
+
+/* ---------- orange panel ---------- */
+.panel {
+  position: relative;
+  z-index: 2;
+  flex: 0 0 40%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: linear-gradient(160deg, #EC8D57 0%, #E57E45 100%);
+  color: #FFFFFF;
+  /* the panel's edge facing the form is rounded */
+  border-radius: 150px 0 0 100px;
+}
+
+.panelContent {
+  position: relative;
+  z-index: 1;
+  max-width: 320px;
+  padding: 0 24px;
+  text-align: center;
+}
+
+.panelTitle {
+  margin: 0 0 12px;
+  color: #FFFFFF;
+  font-size: 30px;
+  font-weight: 700;
+}
+
+.panelText {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.92);
+}
+
+/* ---------- floating decorative shapes ---------- */
+.shape {
+  position: absolute;
+  pointer-events: none;
+  animation: float 9s ease-in-out infinite alternate;
+}
+
+.triangleBig {
+  top: -40px;
+  right: -60px;
+  width: 0;
+  height: 0;
+  border-left: 180px solid transparent;
+  border-right: 180px solid transparent;
+  border-bottom: 260px solid rgba(255, 255, 255, 0.14);
+  transform: rotate(-25deg);
+  animation-duration: 12s;
+}
+
+.triangleSmall {
+  bottom: 18%;
+  right: 22%;
+  width: 0;
+  height: 0;
+  border-left: 22px solid transparent;
+  border-right: 22px solid transparent;
+  border-bottom: 34px solid rgba(255, 255, 255, 0.22);
+  animation-duration: 7s;
+  animation-delay: -2s;
+}
+
+.diamond {
+  top: 18%;
+  left: 18%;
+  width: 34px;
+  height: 34px;
+  background: rgba(255, 255, 255, 0.2);
+  transform: rotate(45deg);
+  animation-name: floatSpin;
+  animation-duration: 10s;
+}
+
+.circleBig {
+  bottom: -120px;
+  left: -90px;
+  width: 300px;
+  height: 300px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.13);
+  animation-duration: 14s;
+}
+
+.dotOne {
+  top: 58%;
+  left: 12%;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.25);
+  animation-duration: 6s;
+}
+
+.dotTwo {
+  top: 66%;
+  right: 12%;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  animation-duration: 8s;
+  animation-delay: -3s;
+}
+
+.bar {
+  bottom: 30%;
+  left: 30%;
+  width: 8px;
+  height: 30px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.25);
+  transform: rotate(-30deg);
+  animation-name: floatSpin;
+  animation-duration: 11s;
+}
+
+@keyframes float {
+  from {
+    translate: 0 0;
+  }
+  to {
+    translate: 14px -22px;
+  }
+}
+
+@keyframes floatSpin {
+  from {
+    translate: 0 0;
+    rotate: 0deg;
+  }
+  to {
+    translate: -12px 18px;
+    rotate: 60deg;
+  }
+}
+
+/* small screens: stack, the panel becomes a slim banner */
+@media (max-width: 860px) {
+  .shell {
+    flex-direction: column-reverse;
+  }
+
+  .panel {
+    flex: 0 0 auto;
+    padding: 28px 0;
+    border-radius: 0 0 40px 40px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shape {
+    animation: none !important;
+  }
+}

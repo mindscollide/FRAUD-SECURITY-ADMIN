@@ -37,7 +37,7 @@ const Dashboard = () => {
         ...open,
         open: true,
         message:
-          "Enable to connect to server please check your connection or contact support",
+          "Unable to connect to server please check your connection or contact support",
       });
       dispatch(SomeThingWentWrongRemove());
     }
@@ -62,7 +62,7 @@ const Dashboard = () => {
     <>
       <Layout style={Style.Shell}>
         <Header
-          title={"Fraud Security Administrator"}
+          title={"Fraud Digitization Portal"}
           UserDetails={UserDetails}
           Notification={AppContent.Notification}
         />

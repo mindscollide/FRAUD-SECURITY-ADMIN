@@ -1,6 +1,163 @@
 .header {
   padding: 0 !important;
   position: fixed;
+  background-color: #FFF5EE;
+  height: 50px;
+  top: 0;
+  z-index: 100;
+  width: 100%;
+}
+
+.inner-container {
+  display: flex;
+  justify-content: space-between;
+  height: 100%;
+}
+
+.heading-main-container {
+  width: 100%;
+  height: inherit;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  padding-left: 20px;
+}
+
+.heading-main {
+  color: #EC8D57 !important;
+  margin: 0 !important;
+}
+
+/* ---------- Right-hand actions (design: "Minds Collide New Screens") ---------- */
+
+/* Back / notification / logout: each icon sits in a small white rounded card */
+.logout-icon-section,
+.notify {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 8px;
+  flex-shrink: 0;
+}
+
+.header-icon-card {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background-color: #FFFFFF;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+  color: #2F2F2F;
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.header-icon-card i {
+  line-height: 1;
+}
+
+.header-icon-card:hover {
+  background-color: #EC8D57;
+  color: #FFFFFF;
+}
+
+.noti-icon {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+/* count badge on the card's top-right corner */
+.noti-icon .ant-badge-count {
+  background-color: #EC8D57;
+  color: #FFFFFF;
+  font-size: 11px;
+  font-weight: 600;
+  box-shadow: 0 0 0 2px #FFFFFF;
+}
+
+.menu-box {
+  padding: 10px;
+}
+
+.own-icons {
+  font-size: 30px;
+}
+
+.NewUserHeading {
+  padding-left: 10px;
+}
+
+/* Avatar: name + round picture with an orange ring */
+.action-container {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  padding: 0 20px 0 8px;
+  flex-shrink: 0;
+}
+
+.avatar {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  color: #2F2F2F;
+  cursor: default;
+}
+
+.user-name {
+  display: block;
+  max-width: 150px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-size: 13px;
+  font-weight: 600;
+  margin-right: 10px;
+  transition: color 0.3s;
+}
+
+.user-name p {
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* full name on hover */
+.avatar:hover .user-name {
+  max-width: none;
+  color: #EC8D57;
+}
+
+.user-figure {
+  width: 40px;
+  height: 40px;
+  border-radius: 100%;
+  border: 2px solid #EC8D57;
+  background-color: #FFF5EE;
+  overflow: hidden;
+  flex-shrink: 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.user-icon-header {
+  width: 32px;
+  height: 32px;
+}
+
+h3.ant-typography.heading-main {
+  margin-bottom: 0;
+}
+
+/* .header {
+  padding: 0 !important;
+  position: fixed;
   -webkit-box-shadow: 0px 0px 10px 0px rgb(0 0 0 / 30%);
   -moz-box-shadow: 0px 0px 10px 0px rgb(0 0 0 / 30%);
   box-shadow: 0px 0px 5px 0px rgb(0 0 0 / 30%);
@@ -22,11 +179,11 @@
   text-align: left;
   margin-left: 0;
   width: 80px;
-  height: inherit;
-  background-color: #04908b;
+  background-color: #EC8D57;
   display: flex;
   justify-content: center;
   align-items: center;
+  padding: 0 10px;
 }
 
 .heading-main-container {
@@ -40,25 +197,32 @@
 }
 
 .heading-main {
-  color: #025f5c !important;
+  color: #EC8D57 !important;
   margin: 0 !important;
 }
+
+h3.ant-typography.heading-main {
+  margin-bottom: 0;
+}
+
 
 .action-container {
   height: 100%;
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  width: 320px;
+  width: auto;
 }
 
 .avatar {
   background-color: #e3eaea;
-  width: 100%;
+  width: auto;
   height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
+  gap: 8px;
+  padding: 0 16px;
+  cursor: pointer;
 }
 
 .avatar:hover {
@@ -67,17 +231,33 @@
   color: white;
 }
 
-.dropdown-icon {
-  color: #8c8e98;
+.user-figure {
+  display: inline-block;
+  width: 50px;
+  height: 50px;
+  border-radius: 100%;
+  border: 2px solid #dbe0e3;
+  overflow: hidden;
+  flex-shrink: 0;
 }
 
-.noti-icon {
-  color: #8c8e98;
+.user-icon-header {
+  margin-left: -5px;
 }
 
-.noti-icon:hover {
-  color: white;
+.user-dropdown-arrow {
+  font-size: 12px;
+  color: inherit;
 }
+
+.user-dropdown-overlay .ant-dropdown-menu {
+  min-width: 220px;
+}
+
+.ant-dropdown-menu-item-disabled {
+  cursor: not-allowed !important;
+}
+
 
 .notify {
   width: 8%;
@@ -91,16 +271,47 @@
   color: white;
 }
 
-.menu-box {
-  padding: 10px;
-}
-
-.own-icons {
+.noti-icon {
+  color: #8c8e98;
+  width: 100%;
+  height: 100%;
   font-size: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
 }
 
-.logout-icon {
-  margin-top: 2px;
+.notify:hover .noti-icon {
+  color: white !important;
+}
+
+.noti-icon .ant-badge {
+  color: inherit;
+}
+
+.ant-badge {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  color: rgba(0, 0, 0, 0.85);
+  font-size: 20px;
+  font-variant: tabular-nums;
+  font-feature-settings: "tnum";
+  list-style: none;
+  position: relative;
+  display: inline-block;
+  line-height: 1;
+}
+
+.NewUserHeading {
+  padding-left: 10px;
+}
+
+
+.logout-icon-section {
+  width: 7%;
+  padding-left: 20px;
 }
 
 .logout-icon-section:hover {
@@ -109,40 +320,15 @@
   color: white;
 }
 
-.user-figure {
-  display: inline-block;
-  width: 50px;
-  height: 50px;
-  border-radius: 100%;
-  border: 2px solid #dbe0e3;
-  overflow: hidden;
+
+.dropdown-icon {
+  color: #8c8e98;
 }
 
-.user-name {
-  display: inline-block;
-  max-width: 150px;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  font-size: 13px;
-  font-weight: 600;
-  margin-right: 10px;
-  margin-top: 15px;
+.menu-box {
+  padding: 10px;
 }
 
-.user-icon-header {
-  margin-left: -5px;
-}
-
-.logout-icon-section {
-  width: 7%;
-  padding-left: 23px;
-}
-
-h3.ant-typography.heading-main {
-  margin-bottom: 0;
-}
-
-.NewUserHeading {
-  padding-left: 10px;
-}
+.own-icons {
+  font-size: 30px;
+} */

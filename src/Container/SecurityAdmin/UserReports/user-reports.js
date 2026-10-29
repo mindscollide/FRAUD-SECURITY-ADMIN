@@ -222,7 +222,7 @@ const UserReports = () => {
             <Button
               text="Reset"
               icon={<i className="icon-reset icon-size-zero"></i>}
-              applyClass="btnSecondarySolid"
+              applyClass="btnSecondarySolidReset"
               size="small"
               click={resetData}
             />
