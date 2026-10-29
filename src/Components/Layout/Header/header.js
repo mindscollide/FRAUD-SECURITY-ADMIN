@@ -118,7 +118,7 @@ const Header = ({ Notification, title, UserDetails }) => {
                   <NotificationsNoneIcon
                     // Matches MUI's fontSize="large" (35px), which this
                     // icon used before the antd swap.
-                    style={{ fontSize: "35px" }}
+                    style={{ fontSize: "24px" }}
                     className="noti-icon"
                   />
                 </Badge>
